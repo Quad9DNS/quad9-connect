@@ -22,14 +22,13 @@ android {
     }
 
     flavorDimensions = ["store"]
+    setArchivesBaseName("quad9-aegis")
     productFlavors {
         googleplay {
             dimension "store"
-            setArchivesBaseName("quad9-aegis-gplay")
         }
         fdroid {
             dimension "store"
-            setArchivesBaseName("quad9-aegis-fdroid")
         }
     }
 
