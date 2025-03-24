@@ -32,4 +32,4 @@ Quad9 connect uses the following third-party software:
 
 ## License
 
-[AGLP-3.0](./LICENSE)
+[AGPL-3.0](./LICENSE)
