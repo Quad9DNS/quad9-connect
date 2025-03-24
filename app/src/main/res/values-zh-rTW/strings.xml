@@ -1,0 +1,122 @@
+<resources>
+    <string name="app_name">Quad9 Connect</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+
+    <string name="btn_test">測試</string>
+    <string name="crash_test">讓此 app 崩潰</string>
+    <string name="btn_test_restart">重新啟動此 App</string>
+    <string name="btn_show_counts">流量計算</string>
+
+
+    <string name="fail_test_tls">失敗</string>
+    <string name="fail_test_udp">失敗</string>
+
+    <string name="navigation_drawer_open">打開側邊導覽欄</string>
+    <string name="navigation_drawer_close">關閉側邊導覽欄</string>
+
+
+    <string name="nav_home">主頁面</string>
+    <string name="nav_settings">設定</string>
+    <string name="nav_support">取得支援</string>
+    <string name="nav_search">搜尋</string>
+    <string name="nav_FAQ">FAQ</string>
+    <string name="nav_statistics">統計資料</string>
+    <string name="nav_about">關於此 app</string>
+
+
+    <string name="title_home">Quad9 Connect</string>
+    <string name="title_settings">設定</string>
+    <string name="title_support">取得支援</string>
+    <string name="title_FAQ">FAQ</string>
+    <string name="title_statistics">統計資料</string>
+    <string name="title_about">關於此 app</string>
+
+    <string name="support_content">若有任何問題，請聯絡支援團隊</string>
+    <string name="btn_send_mail">寄發 e-mail</string>
+
+    <string name="crash_dialog_title">這個 app 爆炸了</string>
+    <string name="crash_dialog_text">能請您將錯誤訊息寄給我們嗎？</string>
+
+    <string name="app_version">版本: </string>
+
+    <string name="note_for_fail">連線異常可能是網路異常，或遠端伺服器沒有回應所造成</string>
+    <string name="in_total">在 %d 次查詢中</string>
+    <string name="sta_success">正常</string>
+    <string name="sta_blocked">攔截成功</string>
+    <string name="sta_failed">連線異常</string>
+
+
+    <string name="toast_malicious">攔截惡意網域了！</string>
+    <string name="toast_connected">連上 Quad9 了！</string>
+    <string name="toast_hijacked">發現 DNS 結果被修改</string>
+    <string name="toast_unreachable">無法連上 Quad9</string>
+
+
+    <string name="queries_are_blocked">已擋下了 %d 次可疑的查詢</string>
+    <string name="queries_are_secured">已守護了 %d 次查詢</string>
+    <string name="queries_default">保護中</string>
+
+    <string name="noti_title_connect">已連上 Quad9</string>
+    <string name="noti_title_network_problem">Wifi 好像連不太上？</string>
+    <string name="noti_content_network_problem">暫時關掉 Quad9 Connect 試試</string>
+    <string name="noti_content_block"> Quad9 Connect 擋住了 </string>
+
+    <string name="record_all">全部</string>
+    <string name="record_blocked">被擋下的</string>
+
+    <string name="not_enable">時候到了，連上 Quad9 吧！</string>
+    <string name="enable_connected"> Quad9 保護中 :) </string>
+    <string name="enable_connected_nonblock">已連上 Quad9，建議啟動保護機制 </string>
+
+
+    <string name="empty_recent_blocked">最近沒事</string>
+    <string name="empty_recent_query">查無紀錄</string>
+
+    <string name="p_title_malicious">阻擋惡意網站</string>
+    <string name="p_summary_malicious">擋下惡意的網域，例如惡意軟體或釣魚網頁</string>
+
+    <string name="p_title_tls">啟動傳輸加密</string>
+    <string name="p_summary_tls">透過加密機制保護您的 DNS 查詢</string>
+
+
+    <string name="p_title_boot">開機自動啟動</string>
+    <string name="p_summary_boot">重啟時自動啟動保護</string>
+
+    <string name="p_title_whiteList">例外 app 名單</string>
+    <string name="p_summary_whiteList">這些 app 不需要透過 Quad9 連線</string>
+
+    <string name="reset_statistics">重置統計資訊</string>
+    
+    <string-array name="stores">
+        <item>com.android.vending</item>
+        <item>com.android.captiveportallogin</item>
+    </string-array>
+    <string name="about_description">Quad9 提供安全得方式連到 Quad9 DNS 查詢系統，Quad9 是一個免費提供資安和隱私服務的非營利機構，您會連到你最近的 Quad9 伺服器，連線速度因地區而異。
+        您的查詢和ip位置絕對不會被記錄，Quad9 有嚴格的隱私政策並遵守GDPR要求。細節請點 https://www.quad9.net/privacy </string>
+    <string name="about_contributors">Application and all logos copyright or trademark 2019 CleanerDNS, Inc. dba Quad9. \nApplication written by Paul Su. Testing by York Lin. UI designed by Lynda Lin.</string>
+    <string name="test_activated">啟動: %b</string>
+    <string name="test_connected">連上: %b</string>
+    <string name="connect_encrypted">隱私連線</string>
+    <string name="not_connected">斷線</string>
+    <string name="noti_title_disabled">"Quad9 不想跟你說再見 "</string>
+    <string name="intro_page_3_title">權限</string>
+    <string name="noti_content_disabled">你現在不受Quad9保護了</string>
+    <string name="intro_page_1_title">歡迎使用Quad9 Connect</string>
+    <string name="intro_page_2_title">歡迎使用Quad9 Connect</string>
+    <string name="intro_page_1" translatable="false">Quad9 DNS 會阻擋惡意網站且使用隱私的 DNS</string>
+    <string name="intro_page_2" translatable="false">Quad9 是非營利組織，不會搜集你的個人資料</string>
+    <string name="intro_page_3">Quad9 需要VPN的權限，等等按下確認才可以正常使用</string>
+    <string name="connect_unencrypted">連線(非安全)</string>
+    <string name="queries_are_sent">已送出 %d 次查詢</string>
+    <string name="p_dialog_tls">未加密的傳輸可能較快，但也相對不安全</string>
+    <string name="caution">注意！</string>
+    <string name="p_title_collection">問題回報</string>
+    <string name="p_summary_collection">自動傳送錯誤訊息</string>
+    <string name="noti_option_network_problem">重啟 Quad9</string>
+    <string name="toast_restart">Quad9 一分鐘之後回來</string>
+    <string name="reset_dialog">確定要歸零紀錄嗎?</string>
+
+
+</resources>

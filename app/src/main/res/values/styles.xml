@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/activityBackground</item>
+        <item name="actionMenuTextColor">@color/toolBarText</item>
+        <item name="android:textColorPrimary">@color/toolBarText</item>
+        <item name="android:textColorSecondary">@color/toolBarText</item>
+        <item name="android:titleTextStyle">@color/toolBarText</item>
+        <item name="titleTextStyle">@color/toolBarText</item>
+        <item name="android:textColor">@color/toolBarText</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:alertDialogTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="android:dialogTheme">@style/DialogStyle</item>
+        <!--<item name="android:alertDialogTheme">@style/DialogStyle</item>-->
+
+        <item name="android:activatedBackgroundIndicator">@drawable/nav_state_list</item>
+    </style>
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/theButton</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppThemeDialog" parent="AppTheme">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:background">@color/activityBackground</item>
+    </style>
+
+    <style name="DialogStyle" parent="android:Theme.Material.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:background">@color/activityBackground</item>
+        <item name="android:windowBackground">@color/activityBackground</item>
+        <item name="android:colorBackground">@color/activityBackground</item>
+
+
+    </style>
+
+    <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+</resources>

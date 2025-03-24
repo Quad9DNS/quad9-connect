@@ -1,0 +1,210 @@
+<resources>
+    <string name="app_name">Quad9 Connect</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+
+
+    <string name="btn_test">Test</string>
+    <string name="crash_test">Crash Test</string>
+    <string name="btn_test_restart">Set Server</string>
+    <string name="btn_edns_code">Set EDNS Option code</string>
+    <string name="btn_edns_payload">Set EDNS Option payload</string>
+    <string name="btn_show_counts">Traffic</string>
+    <string name="btn_test_reconnect">Reconnect</string>
+    <string name="btn_test_log" translatable="false">Logs</string>
+    <string name="btn_dnsset" translatable="false">Current routed dns IPS</string>
+    <string name="btn_distribution" translatable="false">Distribution</string>
+    <string name="btn_test_traceroute" translatable="false">Traceroute</string>
+
+
+    <string name="fail_test_tls">FAIL</string>
+    <string name="fail_test_udp">FAIL</string>
+    <string name="test_activated">activated: %b</string>
+    <string name="test_connected">connected: %b</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <string name="nav_home">Home</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_support">Get Support</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_FAQ">FAQ</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="nav_about">About</string>
+
+
+    <string name="title_home">Quad9 Connect</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_support">Get Support</string>
+    <string name="title_FAQ">FAQ</string>
+    <string name="title_statistics">Statistics</string>
+    <string name="title_search">Search</string>
+    <string name="title_about">About</string>
+
+    <string name="support_content">Please contact support </string>
+    <string name="btn_send_mail">Send Mail</string>
+    <string name="btn_gen_traceroute">Traceroute to Quad9</string>
+
+
+
+    <string name="crash_dialog_title">Oh no, Quad9 Connect has crashed!!</string>
+    <string name="crash_dialog_text">Would you like to help us by sending us the error message via email?</string>
+
+    <string name="app_version">Version: </string>
+
+    <string name="note_for_fail">*Failed responses may be due to remote server timeouts or local network failures</string>
+    <string name="in_total">In total %d queries</string>
+    <string name="sta_success">Success</string>
+    <string name="sta_failed">Failed*</string>
+    <string name="sta_blocked">Blocked</string>
+
+
+    <string name="toast_malicious">Malicious Domain Blocked</string>
+    <string name="toast_connected">Connected to Quad9!</string>
+    <string name="toast_hijacked">DNS hijacked on the way</string>
+    <string name="toast_unreachable">Cannot reach Quad9</string>
+    <string name="toast_privatedns">Private DNS must be disabled to use Quad9 Connect</string>
+    <string name="toast_restart">Quad9 will be back protecting you in 60 seconds!</string>
+    <string name="toast_no_mail">There are no email clients installed.</string>
+
+
+    <string name="queries_are_blocked"> %d malicious lookups were blocked.</string>
+    <string name="queries_are_sent"> %d queries sent.</string>
+    <string name="queries_are_secured"> %d queries secured.</string>
+    <string name="queries_default">Queries are secured.</string>
+
+    <string name="noti_title_connect">Quad9 Connected</string>
+    <string name="noti_title_network_problem">Having a problem connecting to WiFi?</string>
+    <string name="noti_content_network_problem">Please try restarting Quad9.</string>
+    <string name="noti_option_network_problem">Restart Quad9</string>
+    <string name="noti_content_block">Blocked domain\u0020</string>
+    <string name="noti_title_disabled">Quad9 disabled</string>
+    <string name="noti_content_disabled">You are not protected by Quad9.</string>
+
+    <string name="record_all">All</string>
+    <string name="record_blocked">Blocked</string>
+    <string name="record_failed">Failed</string>
+    <string name="record_query_time">Query Time: %dms</string>
+    <string name="record_ans">Ans: %s</string>
+    <string name="record_type">Type: %s</string>
+
+
+
+    <string name="not_enable">You are not protected by Quad9</string>
+    <string name="connect_encrypted">ENCRYPTED</string>
+    <string name="connect_privateDns">Private DNS must be disabled to use Quad9 Connect. Try to Quad9 Connect again after disabling Private DNS</string>
+    <string name="not_connected">NOT CONNECTED</string>
+    <string name="not_connnected_trusted_network">Disabled - Connected to a Trusted Network</string>
+
+    <string name="enable_connected">You are protected by Quad9 </string>
+    <string name="enable_connected_nonblock">You are using Quad9</string>
+
+    <string name="other_always_vpn">There is a VPN service active on this device.
+        Quad9 Connect requires the VPN functionality of Android to run.
+        You must first disable the other VPN in order to enable Quad9 Connect.
+        Alternatively, if you want to utilize a VPN and use Quad9,
+        consider configuring Quad9 in Private DNS.</string>
+
+    <string name="empty_recent_blocked">No recent queries to malicious hosts have been blocked</string>
+    <string name="empty_recent_query">No recent queries </string>
+    <string name="empty_recent_failed">No recent queries failed to accessing Quad9</string>
+
+
+    <string name="p_title_malicious">Block malicious domains</string>
+    <string name="p_summary_malicious">Blocks malware, spyware, phishing domains</string>
+
+    <string name="p_title_ecs">ECS </string>
+    <string name="p_summary_ecs">Provides: Security blocklist, DNSSEC, EDNS Client-Subnet sent.</string>
+
+    <string name="p_title_tls">Encryption</string>
+    <string name="p_summary_tls">Protect queries with DNS over TLS</string>
+    <string name="caution">Caution!</string>
+    <string name="p_dialog_tls">Set encryption on for queries.</string>
+
+    <string name="p_title_boot">Start at boot</string>
+    <string name="p_summary_boot">App will automatically start running after device reboot.</string>
+
+    <string name="p_title_whiteList">Excluded Applications</string>
+    <string name="p_summary_whiteList">Use default system resolver for these applications.</string>
+
+    <string name="p_title_domain_whitelist">Local Domains</string>
+    <string name="p_summary_domain_whitelist">Queries for domains or subdomains on this list will be sent to your local DNS servers and will not be sent to Quad9 Connect.</string>
+
+    <string name="p_title_collection">Bug report</string>
+    <string name="p_summary_collection">Report crash and debug data</string>
+
+    <string name="p_title_enhanced">Enhanced Domain Info</string>
+    <string name="p_summary_enhanced">Provides additional info about domains in the logs. Queries Quad9 and 3rd party APIs.</string>
+
+    <string name="reset_statistics">Reset Statistics</string>
+    <string name="reset_dialog">Are you sure to you wish to reset statistics?</string>
+
+    <string name="about_description">Quad9 Connect provides encrypted access to the Quad9 Recursive DNS system.
+        Quad9 is a not-for-profit organization which provides free DNS-based cybersecurity and privacy services in order to make the Internet safer and more stable.
+    \nYour queries will go to the Quad9 node that is closest to you based on your network provider.
+        Query records are never associated with your IP address, and Quad9 has strict privacy rules that are designed to comply with GDPR requirements.</string>
+    <string name="about_contributors">Quad9 Connect is distributed with the AGPL-3.0 License. Logos copyright of Quad9
+    \nOriginal App Creator - Paul Su
+    \nOriginal UI Design - Lynda Lin
+    \n
+    \nQuad9 Connect makes use of the following, open-source projects:
+        \n<a href="https://github.com/kaitoy/pcap4j">Pcap4J</a> by <a href="https://github.com/kaitoy">Kaito Yamada</a> - <a href="https://github.com/kaitoy/pcap4j/blob/v1/LICENSE">MIT</a>
+        \n<a href="https://github.com/rtreffer/minidns">MiniDNS</a> by <a href="https://github.com/rtreffer">Rene Treffer</a> -  <a href="https://github.com/MiniDNS/minidns/blob/master/LICENCE_WTFPL">WTFPL</a>
+        \n<a href="https://github.com/ACRA/acra">acra</a> by <a href="https://github.com/ACRA">ACRA</a> - <a href="https://github.com/ACRA/acra/blob/master/LICENSE">Apache</a>
+        \n<a href="https://github.com/google/conscrypt">conscrypt</a> by <a href="https://github.com/google">google</a> -  <a href="https://github.com/google/conscrypt/blob/master/LICENSE">Apache</a>
+        \n<a href="https://github.com/AppIntro/AppIntro">AppIntro</a> by <a href="https://github.com/AppIntro">AppIntro</a> - <a href="https://github.com/AppIntro/AppIntro/blob/master/LICENSE">Apache</a>
+    </string>
+    <string name="about_privacy">View Privacy Policy</string>
+
+    <string name="intro_page_1">Quad9 DNS protects your mobile device against malware and phishing sites, and encrypts your DNS traffic against interception.</string>
+    <string name="intro_page_2">Quad9 is a not-for-profit organization, and provides this service and software at no cost, and does not collect or resell your personal data.</string>
+    <string name="intro_page_3">Quad9 Connect needs to create a VPN tunnel to encrypt your DNS traffic. A screen asking for permission to create a VPN connection will appear - please select "Ok' to allow Quad9 Connect to function.</string>
+
+    <string name="intro_page_1_title">Welcome to Quad9 Connect</string>
+    <string name="intro_page_2_title">Welcome to Quad9 Connect</string>
+    <string name="intro_page_3_title">Permissions</string>
+
+    <string name="whitelist_dialogue_title">Use Local DNS Resolver</string>
+    <string name="whitelist_dialogue_content">This will exclude this domain from DNS resolution through Quad9 and send it to the resolver configured in your devices settings.</string>
+    <string name="whitelist_is_added">\u0020will use your local DNS resolver.</string>
+    <string name="whitelist_dialogue_proceed">Proceed</string>
+    <string name="whitelist_dialogue_cancel">Cancel</string>
+
+    <string name="whitelist_title">Add domain, this will connect to your default DNS server.
+                        We support wilcards example.com and exact match foo.example.com. </string>
+    <string name="whitelist_hint"> Send queries to default DNS server. </string>
+    <string name="whitelist_add">Add</string>
+
+    <string name="whitelist_cancel">Cancel</string>
+
+    <string name="whitelist_confirm"> Sure to remove</string>
+
+    <string name="whitelist_remove"> Remove</string>
+
+
+    <string-array name="stores">
+        <item>com.android.vending</item>
+        <item>com.android.captiveportallogin</item>
+    </string-array>
+    <string name="connect_unencrypted">UNENCRYPTED</string>
+
+    <string name="dia_traffic">1 hr\nConnections: %d\nQueries Sent: %d\nQueries Received: %d\nMB estimated: %.2fMB\n
+        1 day\nConnections: %d\nQueries Sent: %d\nQueries Received: %d\nMB estimated: %.2fMB</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="search_hint">Search a domain to see if we’re blocking it</string>
+    <string name="search_btn">Submit</string>
+    <string name="search_result">This domain listed as harmful by partners:</string>
+    <string name="search_statu_blocked">Blocked!</string>
+    <string name="search_statu_nonblocked">Not Blocked!</string>
+    
+    <string name="shortcut_label_connect">Connect</string>
+    <string name="shortcut_label_disconnect">Disconnect</string>
+    <string name="trusted_networks_location_permission">In order to use \"Trusted Networks\" feature, you need to give the application location permission.</string>
+
+
+
+</resources>

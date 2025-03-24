@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#95284B</color>
+    <color name="activityBackground">#000000</color>
+
+    <!--<color name="activityBackground">#483d3f</color>-->
+    <color name="toolBarText">#f4ebd9</color>
+    <color name="theButton">#95284B</color>
+
+    <color name="active">#94315B</color>
+    <color name="notActive">#999999</color>
+    <color name="success">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="cardBg">#808080</color>
+    <color name="cardBgText">#333333</color>
+    <color name="cardMaliciousText">#4C142A</color>
+    <color name="nonblockSerach">#4AA8AB</color>
+    <color name="transparent">#00000000</color>
+
+</resources>

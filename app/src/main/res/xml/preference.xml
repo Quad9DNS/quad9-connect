@@ -1,0 +1,83 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="checkbox_malicious"
+            android:summary="@string/p_summary_malicious"
+            android:title="@string/p_title_malicious" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="checkbox_ecs"
+            android:summary="@string/p_summary_ecs"
+            android:title="@string/p_title_ecs" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="checkbox_tls"
+            android:summary="@string/p_summary_tls"
+            android:title="@string/p_title_tls" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <SwitchPreference
+            android:key="checkbox_notification"
+            android:defaultValue="true"
+            android:summary="Receive connection status and malicious domain warnings."
+            android:title="Notifications" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="checkbox_auto_start"
+            android:summary="@string/p_summary_boot"
+            android:title="@string/p_title_boot" />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="checkbox_collection"
+            android:summary="@string/p_summary_collection"
+            android:title="@string/p_title_collection" />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="checkbox_enhanced"
+            android:summary="@string/p_summary_enhanced"
+            android:title="@string/p_title_enhanced" />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <MultiSelectListPreference
+            android:defaultValue="@array/stores"
+            android:dialogTitle="App List"
+            android:key="white_list"
+            android:summary="@string/p_summary_whiteList"
+            android:title="@string/p_title_whiteList" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference
+            android:title="@string/p_title_domain_whitelist"
+            android:key="domain_white_list"
+            android:summary="@string/p_summary_domain_whitelist"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference
+            android:title="Trusted Networks"
+            android:key="trusted_networks"
+            android:summary="Automatically disable Quad9 Connect when connected to specific networks."
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

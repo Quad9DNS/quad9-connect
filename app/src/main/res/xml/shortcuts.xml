@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <shortcut
+        android:shortcutId="CONNECT"
+        android:enabled="true"
+        android:icon="@drawable/ic_play"
+        android:shortcutShortLabel="@string/shortcut_label_connect"
+        android:shortcutLongLabel="@string/shortcut_label_connect"
+        android:shortcutDisabledMessage="@string/shortcut_label_connect"
+        tools:ignore="UnusedAttribute">
+        <intent
+            android:action="com.quad9.aegis.MainActivity.ACTION_CONNECT"
+            android:targetPackage="com.quad9.aegis"
+            android:targetClass="com.quad9.aegis.MainActivity" />
+        <capability-binding android:key="custom.actions.intent.ACTION_CONNECT_DNS"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="DISCONNECT"
+        android:enabled="true"
+        android:icon="@drawable/ic_stop"
+        android:shortcutShortLabel="@string/shortcut_label_disconnect"
+        android:shortcutLongLabel="@string/shortcut_label_disconnect"
+        android:shortcutDisabledMessage="@string/shortcut_label_disconnect"
+        tools:ignore="UnusedAttribute">
+        <intent
+            android:action="com.quad9.aegis.MainActivity.ACTION_DISCONNECT"
+            android:targetPackage="com.quad9.aegis"
+            android:targetClass="com.quad9.aegis.MainActivity" />
+        <capability-binding android:key="custom.actions.intent.ACTION_DISCONNECT_DNS"/>
+    </shortcut>
+</shortcuts>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/cardMaliciousText" />
+
+    <padding
+        android:bottom="1dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp" />
+    //角的話，裡邊有引數可以單獨設定
+    <corners android:radius="3dp" />
+
+</shape>

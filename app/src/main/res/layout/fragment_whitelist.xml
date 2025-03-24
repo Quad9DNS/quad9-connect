@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Presenter.Record"
+    android:background="@drawable/gradient"
+    >
+    <!-- TODO: Update blank fragment layout -->
+    <Button
+        android:id="@+id/add_domain_btn"
+        style="@style/AppTheme.Button"
+        android:layout_marginTop="50dp"
+
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:drawableStart="@drawable/ic_add_white_24dp"
+        android:text="Add Domain"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size_medium"
+/>
+    <TextView
+        android:id="@+id/text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:textColor="@color/active"
+        android:textSize="@dimen/text_size_medium"
+        android:gravity="center"
+        android:visibility="invisible"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/whitelist_recycler_view"
+        android:layout_marginTop="108dp"
+
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+</FrameLayout>
