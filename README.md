@@ -24,3 +24,12 @@ Quad9 connect uses the following third-party software:
 [acra](https://github.com/ACRA/acra) by ACRA - Apache  
 [conscrypt](https://github.com/google/conscrypt) by google -  Apache  
 [AppIntro](https://github.com/AppIntro/AppIntro) by AppIntro - Apache
+
+## Credits
+
+- Po Yuan Su (original author)
+- [Ensar Sarajčić](https://github.com/esensar)
+
+## License
+
+[AGLP-3.0](./LICENSE)
