@@ -1,4 +1,1 @@
-Get protection from malware and phishing with Quad9 DNS while encrypting your
-DNS requests for better privacy. This app overrides local DNS settings for
-both mobile and WiFi networks to use Quad9’s high-performance worldwide
-network of DNS servers. Works on non-rooted devices.
+Android application for Quad9 recursive DNS cybersecurity and privacy services
