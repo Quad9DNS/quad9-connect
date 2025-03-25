@@ -1,5 +1,8 @@
 # ![image](https://github.com/user-attachments/assets/a0fe83fe-7e06-43f9-aa02-4aecf2e0fca4) Quad9 Connect
 
+[<img src="https://f-droid.org/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/packages/com.quad9.aegis)
 
 Quad9 Connect is an Android and ChromeOS app that sends your DNS queries to [Quad9's secure, private, open recursive DNS service](https://quad9.net/).
 
