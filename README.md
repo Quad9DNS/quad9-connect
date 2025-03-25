@@ -27,8 +27,8 @@ Quad9 connect uses the following third-party software:
 
 ## Credits
 
-- Po Yuan Su (original author)
-- [Ensar Sarajčić](https://github.com/esensar)
+- [Po Yuan Su](https://www.linkedin.com/in/po-yuan-su-23a53b173/) - Original Author
+- [Ensar Sarajčić](https://github.com/esensar) - Developer
 
 ## License
 
