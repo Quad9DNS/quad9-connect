@@ -1,5 +1,3 @@
-<img src="https://github.com/user-attachments/assets/a0fe83fe-7e06-43f9-aa02-4aecf2e0fca4">Quad9 Connect</img>
-
 Quad9 Connect is an Android and ChromeOS app that sends your DNS queries to <a href="https://quad9.net">Quad9's secure, private, open recursive DNS service</a>.
 
 Quad9 Connect adds additional functionality and features compared to using Android's Private DNS feature to utilize encrypted DNS or configured Quad9 in Chrome on ChromeOS.
