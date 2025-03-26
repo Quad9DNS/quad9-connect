@@ -84,3 +84,9 @@ if (gradle.startParameter.taskNames.any { task -> task.contains("Googleplay") })
     apply plugin: 'com.google.gms.google-services'
     apply plugin: 'com.google.firebase.crashlytics'
 }
+
+tasks.configureEach { task ->
+    if (task.name.contains("ArtProfile")) {
+        task.enabled = false
+    }
+}
