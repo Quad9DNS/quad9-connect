@@ -29,10 +29,3 @@ jobs:
       with:
         name: quad9-connect-fdroid-test.apk
         path: ./app/build/outputs/apk/fdroid/debug/quad9-aegis-fdroid-debug.apk
-    - name: Build Google Play version
-      run: ./gradlew assembleGoogleplayDebug
-    - name: Upload Google Play APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: quad9-connect-googleplay-test.apk
-        path: ./app/build/outputs/apk/googleplay/debug/quad9-aegis-googleplay-debug.apk
