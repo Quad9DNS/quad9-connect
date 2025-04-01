@@ -97,7 +97,6 @@ public class VpnSeekerService extends VpnService implements Runnable {
                     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                             "Quad9 Foreground",
                             NotificationManager.IMPORTANCE_DEFAULT);
-                    channel.setShowBadge(false);
 
                     ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
                     notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
@@ -186,7 +185,6 @@ public class VpnSeekerService extends VpnService implements Runnable {
                     "Quad9 Foreground",
                     NotificationManager.IMPORTANCE_DEFAULT);
             channel.setSound(null, null);
-            channel.setShowBadge(false);
 
             ((NotificationManager) DnsSeeker.getInstance().getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
