@@ -1,0 +1,2 @@
+- Trusted Networks: Fixed a bug when trying to add a Trusted Network while on Mobile data would add a null entry to the list. Now an error message will display that the device must be connected to WiFi to add a Trusted Network.
+- Quad9 Connect icon will no longer indefinitely show the "notification dot" or "1" on the app icon as if there is some event or message to review. (Requires uninstall + reinstall)
