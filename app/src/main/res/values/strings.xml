@@ -204,7 +204,7 @@
     <string name="shortcut_label_connect">Connect</string>
     <string name="shortcut_label_disconnect">Disconnect</string>
     <string name="trusted_networks_location_permission">In order to use \"Trusted Networks\" feature, you need to give the application location permission.</string>
-
+    <string name="trusted_network_connect_to_wifi">Must be connected to a WiFi Network</string>
 
 
 </resources>
