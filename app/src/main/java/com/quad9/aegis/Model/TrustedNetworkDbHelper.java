@@ -11,13 +11,15 @@ import java.util.List;
 
 public class TrustedNetworkDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "TrustedNetworks.db";
     private static TrustedNetworkDbHelper mInstance = null;
+    private static final String V1_SCHEMA =
+            "CREATE TABLE trusted_networks (bssid TEXT PRIMARY KEY, ssid TEXT)";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TrustedNetworkContract.TrustedNetworkEntry.TABLE_NAME + " (" +
-                    TrustedNetworkContract.TrustedNetworkEntry.COLUMN_BSSID + " TEXT PRIMARY KEY," +
-                    TrustedNetworkContract.TrustedNetworkEntry.COLUMN_SSID + " TEXT)";
+                    TrustedNetworkContract.TrustedNetworkEntry.COLUMN_BSSID + " TEXT PRIMARY KEY NOT NULL," +
+                    TrustedNetworkContract.TrustedNetworkEntry.COLUMN_SSID + " TEXT NOT NULL)";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TrustedNetworkContract.TrustedNetworkEntry.TABLE_NAME;
@@ -38,8 +40,15 @@ public class TrustedNetworkDbHelper extends SQLiteOpenHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        throw new SQLiteException("Can't upgrade database from version " +
-                oldVersion + " to " + newVersion);
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("CREATE TABLE temp_migration_table (bssid TEXT PRIMARY KEY NOT NULL, ssid TEXT NOT NULL)");
+            db.execSQL("INSERT INTO temp_migration_table SELECT * FROM trusted_networks WHERE bssid IS NOT NULL AND ssid IS NOT NULL");
+            db.execSQL("DROP TABLE IF EXISTS trusted_networks");
+            db.execSQL("ALTER TABLE temp_migration_table RENAME TO trusted_networks");
+        } else {
+            throw new SQLiteException("Can't upgrade database from version " +
+                    oldVersion + " to " + newVersion);
+        }
     }
 
     public List<TrustedNetwork> getTrustedNetworks() {

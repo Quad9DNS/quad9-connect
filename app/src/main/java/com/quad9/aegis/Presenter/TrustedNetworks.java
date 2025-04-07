@@ -6,6 +6,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteConstraintException;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -93,6 +95,11 @@ public class TrustedNetworks extends Fragment {
 
     private void addCurrentNetwork() {
         WifiManager wifiManager = getSystemService(requireContext(), WifiManager.class);
+        WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+        if (connectionInfo.getBSSID() == null || connectionInfo.getSSID() == null) {
+            Toast.makeText(requireContext(), R.string.trusted_network_connect_to_wifi, Toast.LENGTH_SHORT).show();
+            return;
+        }
         try {
             TrustedNetworkDbHelper.getInstance(requireContext()).addTrustedNetwork(new TrustedNetwork(wifiManager.getConnectionInfo()));
             mAdapter.updateList();
