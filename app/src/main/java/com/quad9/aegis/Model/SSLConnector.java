@@ -4,29 +4,12 @@ import static org.conscrypt.Conscrypt.newProvider;
 
 import android.net.VpnService;
 import android.os.Build;
-import android.os.PatternMatcher;
 import android.util.Log;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.Security;
-import java.security.cert.CertPath;
-import java.security.cert.CertPathBuilder;
-import java.security.cert.CertPathValidator;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.security.cert.PKIXCertPathValidatorResult;
-import java.security.cert.PKIXParameters;
-import java.security.cert.PKIXRevocationChecker;
-import java.security.cert.TrustAnchor;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 import javax.net.ssl.SNIHostName;
 import javax.net.ssl.SSLContext;
@@ -40,6 +23,8 @@ public class SSLConnector {
 
     // For test
     public SSLConnector() {
+        System.setProperty("com.sun.net.ssl.checkRevocation", "true");
+        Security.setProperty("ocsp.enable", "true");
     }
 
     public SSLSocket connectSSL(boolean firstTime, VpnService service) {
@@ -114,19 +99,15 @@ public class SSLConnector {
             Log.d(TAG, "Creating secure socket to " + host + ":" + port);
             dnsSocket = (SSLSocket) factory.createSocket();
             dnsSocket.setReuseAddress(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && DnsSeeker.getStatus().isCustomServer()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 SSLParameters sslParameters = new SSLParameters();
-                sslParameters.setServerNames(Collections.singletonList(new SNIHostName(host)));
+                if (DnsSeeker.getStatus().isCustomServer()) {
+                    sslParameters.setServerNames(Collections.singletonList(new SNIHostName(host)));
+                }
+                sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
                 dnsSocket.setSSLParameters(sslParameters);
             }
-            dnsSocket.setSSLParameters(new SSLParameters());
-            //factory.setUseSessionTickets(this.dnsSocket , true);
-            //this.dnsSocket = (SSLSocket) factory.createSocket();
-            //Conscrypt.setUseSessionTickets(this.dnsSocket,true);
-
             dnsSocket.setEnabledProtocols(new String[]{"TLSv1.3"});
-            //System.setProperty("com.sun.net.ssl.checkRevocation", "true");
-            //Security.setProperty("ocsp.enable", "true");
 
 
             if (service != null) {
@@ -149,13 +130,6 @@ public class SSLConnector {
                 dnsSocket.setEnabledCipherSuites(suites);
             }
 
-
-            //this.dnsSocket.setEnabledCipherSuites(factory.getSupportedCipherSuites());
-            //Log.d(TAG,"length = "+ dnsSocket.getEnabledCipherSuites().length);
-            /*
-            for (int i=0; i<dnsSocket.getEnabledCipherSuites().length; i++ ) {
-                Log.d("Protocol: " + dnsSocket.getEnabledCipherSuites()[i]);
-            }*/
             Log.d(TAG, "Registering a handshake listener...");
             handshakeListener = new MyHandshakeListener();
             dnsSocket.addHandshakeCompletedListener(handshakeListener);
@@ -163,50 +137,7 @@ public class SSLConnector {
             Log.d(TAG, "Starting handshaking...");
             dnsSocket.startHandshake();
 
-            //Log.d("SSLCERT",dnsSocket.getSession().getPeerCertificateChain()[0].getSubjectDN().getName());
-            //Log.d("SSLCERT",dnsSocket.getSession().getPeerCertificateChain()[0].getIssuerDN().getName());
             Log.d(TAG, "Just connected to " + dnsSocket.getRemoteSocketAddress());
-            if (Build.VERSION.SDK_INT >= 24) {
-                CertPathBuilder cpb = CertPathBuilder.getInstance("PKIX");
-                CertPathValidator validator = CertPathValidator.getInstance("PKIX");
-
-                CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                ByteArrayInputStream bais = new ByteArrayInputStream(dnsSocket.getSession().getPeerCertificates()[1].getEncoded());
-                X509Certificate x509 = (X509Certificate) cf.generateCertificate(bais);
-
-                // Log.d("getPeerCertificates[1]",dnsSocket.getSession().getPeerCertificates()[0].toString());
-
-                TrustAnchor anchor = new TrustAnchor(x509, null);
-                Set anchors = Collections.singleton(anchor);
-                PKIXParameters params = new PKIXParameters(anchors);
-                // Activate certificate revocation checking
-                params.setRevocationEnabled(false);
-                System.setProperty("com.sun.net.ssl.checkRevocation", "true");
-                Security.setProperty("ocsp.enable", "true");
-
-                List list = Arrays.asList(new Certificate[]{dnsSocket.getSession().getPeerCertificates()[0]});
-                CertPath path = cf.generateCertPath(list);
-                PKIXRevocationChecker pkix = (PKIXRevocationChecker) cpb.getRevocationChecker();
-
-                PKIXCertPathValidatorResult result = (PKIXCertPathValidatorResult) validator
-                        .validate(path, params);
-                // Log.d("Revocation check",result.toString());
-            }
-            /*StrictHostnameVerifier verifier = new StrictHostnameVerifier();
-
-            if (!verifier.verify(dnsSocket.getSession().getPeerHost(), dnsSocket.getSession())) {
-                Log.d("SSLCERTVerified failed",dnsSocket.getSession().getPeerHost());
-            }*/
-
-            if (!DnsSeeker.getStatus().isDebugMode()) {
-                if (DnsSeeker.getStatus().isCustomServer()) {
-                    validateCertificates(dnsSocket, host, DnsSeeker.getStatus().getCustomServerIp());
-                } else {
-                    if (!dnsSocket.getSession().getPeerCertificateChain()[0].getSubjectDN().getName().contains("quad9.net")) {
-                        throw new Exception("Hostname error");
-                    }
-                }
-            }
 
             dnsSocket.setTcpNoDelay(true);
         } catch (Exception e) {
@@ -215,31 +146,6 @@ public class SSLConnector {
         }
         return dnsSocket;
     }
-
-//    public class CreateSocketThread extends Thread {
-//        public void run() {
-//            try
-//            {
-//                _buildSocket()
-//
-//                final String readingFeed = receiveData(listener);
-//                if (readingFeed != null){
-//                    //execute next code on main Thread (UI update, etc)
-//                    runOnUiThread(new Runnable() {
-//                        public void run()
-//                        {
-//                            //do something with the data received
-//                        }
-//                    });
-//                }
-//            }
-//            catch(Exception ex)
-//            {
-//                //showToast("Receiving Error: " + ex.toString());
-//                //continue = false;
-//            }
-//        }
-//    }
 
     public static boolean testSocket(String host, VpnService service) {
         SSLContext sc = null;
@@ -259,9 +165,12 @@ public class SSLConnector {
             Log.d(TAG, "Creating secure socket to " + host + ":" + port);
             //dnsSocket.setSoTimeout(timeout);
             dnsSocket = (SSLSocket) factory.createSocket();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && DnsSeeker.getStatus().isCustomServer()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 SSLParameters sslParameters = new SSLParameters();
-                sslParameters.setServerNames(Collections.singletonList(new SNIHostName(host)));
+                if (DnsSeeker.getStatus().isCustomServer()) {
+                    sslParameters.setServerNames(Collections.singletonList(new SNIHostName(host)));
+                }
+                sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
                 dnsSocket.setSSLParameters(sslParameters);
             }
             dnsSocket.setEnabledProtocols(new String[]{"TLSv1.3"});
@@ -290,16 +199,6 @@ public class SSLConnector {
             dnsSocket.startHandshake();
             Log.d(TAG, "Just connected to " + dnsSocket.getRemoteSocketAddress());
 
-            if (!DnsSeeker.getStatus().isDebugMode()) {
-                if (DnsSeeker.getStatus().isCustomServer()) {
-                    validateCertificates(dnsSocket, host, DnsSeeker.getStatus().getCustomServerIp());
-                } else {
-                    if (!dnsSocket.getSession().getPeerCertificateChain()[0].getSubjectDN().getName().contains("quad9.net")) {
-                        throw new Exception("Hostname error");
-                    }
-                }
-            }
-
             dnsSocket.setTcpNoDelay(true);
             dnsSocket.close();
         } catch (Exception e) {
@@ -314,43 +213,6 @@ public class SSLConnector {
             return false;
         }
         return true;
-    }
-
-    private static void validateCertificates(SSLSocket dnsSocket, String expectedHostName, String expectedIp) throws Exception {
-        if (!expectedHostName.equals(expectedIp) && !dnsSocket.getSession().getPeerHost().contains(expectedHostName)) {
-            throw new Exception("Hostname error. Expected " + expectedHostName + ", but found " + dnsSocket.getSession().getPeerHost());
-        }
-
-        X509Certificate cert = (X509Certificate) dnsSocket.getSession().getPeerCertificates()[0];
-        Collection<List<?>> alternativeNames = cert.getSubjectAlternativeNames();
-        if (alternativeNames == null) {
-            throw new Exception("Missing alt names in certificate.");
-        }
-        List<String> altDnsNames = new ArrayList<>();
-        List<String> altIps = new ArrayList<>();
-        for (List<?> altName : alternativeNames) {
-            if (((int) altName.get(0) == 2)) {
-                altDnsNames.add((String) altName.get(1));
-            }
-            if (((int) altName.get(0) == 7)) {
-                altIps.add((String) altName.get(1));
-            }
-        }
-        if (!expectedHostName.equals(expectedIp)) {
-            boolean matchFound = false;
-            for (String altName : altDnsNames) {
-                if (new PatternMatcher(altName.replace("*", ".*"), PatternMatcher.PATTERN_SIMPLE_GLOB).match(expectedHostName)) {
-                    matchFound = true;
-                    break;
-                }
-            }
-            if (!matchFound) {
-                throw new Exception("Certificate DNS hostname error. Expected " + expectedHostName + ", but found " + altDnsNames);
-            }
-        }
-        if (!altIps.isEmpty() && !altIps.contains(expectedIp)) {
-            throw new Exception("Certificate IP error. Expected " + expectedIp + ", but found " + altIps);
-        }
     }
 
     MyHandshakeListener getHandshakeListener() {
