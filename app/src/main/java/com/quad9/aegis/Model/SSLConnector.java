@@ -21,10 +21,13 @@ public class SSLConnector {
     public MyHandshakeListener handshakeListener = null;
     private static final String TAG = "SSLConnector";
 
-    // For test
-    public SSLConnector() {
+    static {
         System.setProperty("com.sun.net.ssl.checkRevocation", "true");
         Security.setProperty("ocsp.enable", "true");
+    }
+
+    // For test
+    public SSLConnector() {
     }
 
     public SSLSocket connectSSL(boolean firstTime, VpnService service) {
