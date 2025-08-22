@@ -1,0 +1,1 @@
+- Security patch: fixed potential security issue with hostname verification
