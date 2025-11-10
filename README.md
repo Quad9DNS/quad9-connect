@@ -1,4 +1,4 @@
-# ![image](https://github.com/user-attachments/assets/a0fe83fe-7e06-43f9-aa02-4aecf2e0fca4) Quad9 Connect
+# ![image](assets/icon-cropped.png) <br /> Quad9 Connect
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
     alt="Get it on F-Droid"
