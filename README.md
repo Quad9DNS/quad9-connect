@@ -1,4 +1,4 @@
-# ![image](assets/icon-cropped.png) <br /> Quad9 Connect
+# <img src="assets/icon-cropped.png" alt="Quad9-Connect Logo" width="128"/> <br /> Quad9 Connect
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
     alt="Get it on F-Droid"
