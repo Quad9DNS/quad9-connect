@@ -1,6 +1,7 @@
 package com.quad9.aegis.Model;
 
 import android.content.SharedPreferences;
+import android.net.VpnService;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -575,7 +576,8 @@ public class ConnectStatus {
     }
 
     public boolean shouldAutoConnect() {
-        return DnsSeeker.getInstance().getSharedConfig().getBoolean("autoConnect", false);
+        // Besides the flag being set, we can auto connect only if we are already the chosen VPN provider
+        return DnsSeeker.getInstance().getSharedConfig().getBoolean("autoConnect", false) && VpnService.prepare(DnsSeeker.getInstance()) == null;
     }
 
     public void setShouldAutoConnect(boolean shouldAutoConnect) {
