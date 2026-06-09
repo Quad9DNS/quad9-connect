@@ -247,7 +247,7 @@ public class ConnectionMonitor extends ConnectivityManager.NetworkCallback {
             }
 
             // We are not on WiFi, cellular is never trusted
-            if (!onWifi && !DnsSeeker.getStatus().isConnected()) {
+            if (!onWifi && !DnsSeeker.getStatus().isConnected() && DnsSeeker.getStatus().shouldAutoConnect()) {
                 Log.i(TAG, "We are not connected, and we are not on wifi, so lets activate");
                 DnsSeeker.getStatus().setOnTrustedNetwork(false);
                 DnsSeeker.activateService();
