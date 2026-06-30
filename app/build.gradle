@@ -7,8 +7,8 @@ android {
         applicationId "com.quad9.aegis"
         minSdkVersion 23
         targetSdkVersion 35
-        versionCode 106
-        versionName "1.2.1"
+        versionCode 107
+        versionName "1.2.2"
         vectorDrawables.useSupportLibrary = true
         ndk {
             debugSymbolLevel 'SYMBOL_TABLE'
