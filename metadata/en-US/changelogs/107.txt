@@ -1,0 +1,1 @@
+- Crash fix: prevent crash when Quad9-Connect is disabled as the main VPN provider when switching to cellular from a trusted network
