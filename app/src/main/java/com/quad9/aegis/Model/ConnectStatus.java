@@ -7,13 +7,13 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class ConnectStatus {
@@ -58,6 +58,8 @@ public class ConnectStatus {
             add("168.192.IN-ADDR.ARPA");
         }
     };
+
+    private static final SecureRandom rng = new SecureRandom();
 
     private boolean activated;
     private boolean connected;
@@ -456,7 +458,7 @@ public class ConnectStatus {
     }
 
     private boolean getRandomBoolean() {
-        return Math.random() < 0.5;
+        return rng.nextDouble() < 0.5;
     }
 
     public String getServerName() {
@@ -496,9 +498,8 @@ public class ConnectStatus {
             server = "9.9.9.9";
             return server;
         } else {
-            Random rand = new Random();
             try {
-                server = serverName.get(rand.nextInt(serverName.size()));
+                server = serverName.get(rng.nextInt(serverName.size()));
             } catch (Exception e) {
                 server = null;
             }
