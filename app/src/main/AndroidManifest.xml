@@ -23,12 +23,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:directBootAware="true"
+        android:intentMatchingFlags="enforceIntentFilter"
         android:theme="@style/AppTheme">
         <service
             android:name=".Model.VpnSeekerService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:foregroundServiceType="systemExempted"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ForegroundServicePermission">
+            <!-- safe to ignore the issue, because we take VPN role for system exempted -->
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
@@ -49,7 +52,6 @@
         <activity
             android:name=".MainActivity"
             android:alwaysRetainTaskState="true"
-            android:screenOrientation="portrait"
             android:exported="true">
 
             <intent-filter>

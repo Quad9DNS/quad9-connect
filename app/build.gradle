@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'com.quad9.aegis'
-    compileSdk 35
+    compileSdk 37
     defaultConfig {
         applicationId "com.quad9.aegis"
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion 37
         versionCode 107
         versionName "1.2.2"
         vectorDrawables.useSupportLibrary = true
@@ -17,12 +17,12 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     flavorDimensions = ["store"]
-    setArchivesBaseName("quad9-aegis")
+    base.archivesName = "quad9-aegis"
     productFlavors {
         googleplay {
             dimension "store"
@@ -55,6 +55,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.activity:activity:1.13.0"
     implementation 'androidx.core:core-ktx:1.15.0'
 
     implementation 'com.google.code.gson:gson:2.10.1'
