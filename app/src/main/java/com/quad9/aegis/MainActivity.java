@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,13 +63,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     public static final String HOMETAG = "nav_home";
 
-    public void dumpstack() {
-        int index = getSupportFragmentManager().getBackStackEntryCount() - 1;
-        for (; index >= 0; index--) {
-            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
-            String tag = backEntry.getName();
+    private OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                String top = getBackStackNameTop();
+                if (top != null && top.equals(HOMETAG)) {
+                    finish();
+                }
+            }
         }
-    }
+    };
 
     private String getBackStackNameTop() {
         int index = getSupportFragmentManager().getBackStackEntryCount() - 1;
@@ -142,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d("MainActivity", "default was hit");
         }
 
-        dumpstack();
         if (fragmentFlag) {
 
             if (fragment != null) {
@@ -156,35 +163,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             onBackStackChanged();  // Need this to make state of drawer
             startActivity(intent);
         }
-        dumpstack();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void onBackPressed() {
-        dumpstack();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            String top = getBackStackNameTop();
-            if (top != null && top.equals(HOMETAG)) {
-                finish();
-            } else {
-                super.onBackPressed();
-            }
-        }
-        dumpstack();
-    }
-
-
-    @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Analytics.INSTANCE.initialize(this);
+
+        getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
 
         if (getIntent() != null) {
             if (TextUtils.equals(getIntent().getAction(), ACTION_CONNECT)) {
@@ -294,6 +283,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navigationView.getMenu().findItem(R.id.nav_about).setChecked(true);
             }
         }
+
+        String top = getBackStackNameTop();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        backPressedCallback.setEnabled(top != null && top.equals(HOMETAG) || drawer.isDrawerOpen(GravityCompat.START));
     }
 
     private BroadcastReceiver switchReceiver = new BroadcastReceiver() {
