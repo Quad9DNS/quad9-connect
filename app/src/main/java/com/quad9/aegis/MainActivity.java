@@ -23,9 +23,11 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.closeDrawer(GravityCompat.START);
             } else {
                 String top = getBackStackNameTop();
-                if (top != null && top.equals(HOMETAG)) {
+                if (TextUtils.equals(top, HOMETAG)) {
                     finish();
                 }
             }
@@ -218,6 +220,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                backPressedCallback.setEnabled(true);
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                String top = getBackStackNameTop();
+                backPressedCallback.setEnabled(TextUtils.equals(top, HOMETAG));
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
         toggle.syncState();
 
         navigationView = findViewById(R.id.nav_view);
@@ -284,9 +306,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        String top = getBackStackNameTop();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        backPressedCallback.setEnabled(top != null && top.equals(HOMETAG) || drawer.isDrawerOpen(GravityCompat.START));
+        backPressedCallback.setEnabled(currentFragment instanceof Home || drawer.isDrawerOpen(GravityCompat.START));
     }
 
     private BroadcastReceiver switchReceiver = new BroadcastReceiver() {
