@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import javax.net.ssl.SSLSocket;
 
@@ -212,7 +212,7 @@ public class TestQuad9 {
 
         DNSMessage message = DNSMessage.builder()
                 .addQuestion(new Question(domain, type))
-                .setId((new Random()).nextInt())
+                .setId((new SecureRandom()).nextInt())
                 .setRecursionDesired(true)
                 .setOpcode(DNSMessage.OPCODE.QUERY)
                 .setResponseCode(DNSMessage.RESPONSE_CODE.NO_ERROR)
