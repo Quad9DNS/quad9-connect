@@ -41,17 +41,16 @@ public class Statistics extends Fragment {
     int success = 0;
     int fail = 0;
     int block = 0;
-    LinearLayout circle_success;
+    View circle_success;
     TextView circle_success_text;
     TextView circle_success_rate;
-    LinearLayout circle_block;
+    View circle_block;
     TextView circle_block_text;
     TextView circle_block_rate;
-    LinearLayout circle_fail;
+    View circle_fail;
     TextView circle_fail_text;
     TextView circle_fail_rate;
     TextView in_total;
-    LinearLayout layout_max;
 
     public Statistics() {
         // Required empty public constructor
@@ -69,16 +68,15 @@ public class Statistics extends Fragment {
         View mView = inflater.inflate(R.layout.fragment_statistics, container, false);
         final Button restBtn = mView.findViewById(R.id.btn_reset_counter);
         in_total = mView.findViewById(R.id.in_total);
-        circle_success = mView.findViewById(R.id.circle_success);
+        circle_success = mView.findViewById(R.id.circle_success_click_area);
         circle_success_text = mView.findViewById(R.id.circle_success_text);
         circle_success_rate = mView.findViewById(R.id.circle_success_rate);
-        circle_block = mView.findViewById(R.id.circle_blocked);
+        circle_block = mView.findViewById(R.id.circle_blocked_click_area);
         circle_block_text = mView.findViewById(R.id.circle_blocked_text);
         circle_block_rate = mView.findViewById(R.id.circle_blocked_rate);
-        circle_fail = mView.findViewById(R.id.circle_failed);
+        circle_fail = mView.findViewById(R.id.circle_failed_click_area);
         circle_fail_text = mView.findViewById(R.id.circle_failed_text);
         circle_fail_rate = mView.findViewById(R.id.circle_failed_rate);
-        layout_max = mView.findViewById(R.id.circle_max);
 
         restBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,9 +213,6 @@ public class Statistics extends Fragment {
         float r_f = (float) fail / (float) total;
         float r_b = (float) block / (float) total;
         Log.d("statistic", "preapring Data: " + String.format("r_s: %f, r_f: %f, r_b: %f ", r_s, r_f, r_b));
-
-        float circle_max = layout_max.getHeight();
-        float circle_min = getResources().getDimension(R.dimen.circle_lower_bound);
 
         DecimalFormat df = new DecimalFormat("##.#%");
 
