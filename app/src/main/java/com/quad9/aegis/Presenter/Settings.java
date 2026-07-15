@@ -59,7 +59,6 @@ public class Settings extends PreferenceFragmentCompat {
     private static CharSequence entries[];
     private static CharSequence entryValues[];
     private static boolean listReady = false;
-    private static MybrRc mReceiver;
 
     public Settings() {
 
@@ -125,7 +124,7 @@ public class Settings extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Load the preferences from an XML resource
         setPreferencesFromResource(R.xml.preference, rootKey);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity());
 
         //onSharedPreferenceChanged(sharedPreferences, getString(R.string.movies_categories_key));
     }
@@ -156,8 +155,7 @@ public class Settings extends PreferenceFragmentCompat {
         super.onCreate(savedInstanceState);
         mListPreference = (MultiSelectListPreference) findPreference("white_list");
         mListPreference.setEnabled(false);
-        mReceiver = new MybrRc();
-        prepareAppList(getActivity().getPackageManager());
+        prepareAppList(requireActivity().getPackageManager());
         //addPreferencesFromResource(R.xml.preference);
         //findPreference("app_version").setSummary();
 
@@ -172,7 +170,7 @@ public class Settings extends PreferenceFragmentCompat {
                     DnsSeeker.scheduleRestart(1, 1);
                 }
                 if (newValue.equals(false)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                     builder.setTitle(R.string.caution);
                     builder.setMessage(R.string.p_dialog_tls);
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -250,37 +248,31 @@ public class Settings extends PreferenceFragmentCompat {
         });
 
         Preference myPref = findPreference("white_list");
-        myPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+        myPref.setOnPreferenceChangeListener((preference, newValue) -> {
 
-                if (DnsSeeker.getStatus().isActive()) {
-                    DnsSeeker.scheduleRestart(1, 1);
-                }
-                return true;
+            if (DnsSeeker.getStatus().isActive()) {
+                DnsSeeker.scheduleRestart(1, 1);
             }
-
+            return true;
         });
 
         Preference domain_white_list = findPreference("domain_white_list");
-        domain_white_list.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Fragment nextFrag = new Whitelist();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, nextFrag)
-                        .hide(Settings.this)
-                        .addToBackStack(null)
-                        .commit();
-                return true;
-            }
+        domain_white_list.setOnPreferenceClickListener(preference -> {
+            Fragment nextFrag = new Whitelist();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, nextFrag)
+                    .hide(Settings.this)
+                    .addToBackStack(null)
+                    .commit();
+            return true;
         });
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter("ListReady"));
+        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(new MybrRc(), new IntentFilter("ListReady"));
 
         Preference trustedNetworks = findPreference("trusted_networks");
         trustedNetworks.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 Fragment nextFrag = new TrustedNetworks();
-                getActivity().getSupportFragmentManager().beginTransaction()
+                requireActivity().getSupportFragmentManager().beginTransaction()
                         .add(R.id.content_frame, nextFrag)
                         .hide(Settings.this)
                         .addToBackStack(null)

@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@layout/menu_nav"
+        app:menu="@menu/menu_nav"
         app:itemBackground="@drawable/nav_state_list"
         />
 </androidx.drawerlayout.widget.DrawerLayout>

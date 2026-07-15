@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,12 +29,13 @@ import com.quad9.aegis.Model.DnsSeeker;
 import com.quad9.aegis.Model.TrustedNetwork;
 import com.quad9.aegis.Model.TrustedNetworkDbHelper;
 import com.quad9.aegis.R;
+import com.quad9.aegis.databinding.FragmentTrustedNetworksBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TrustedNetworks extends Fragment {
-    private RecyclerView mRecyclerView;
+    private FragmentTrustedNetworksBinding binding;
     private MyAdapter mAdapter;
 
     public TrustedNetworks() {
@@ -46,17 +46,15 @@ public class TrustedNetworks extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         RecyclerView.LayoutManager mLayoutManager;
-        View rootView = inflater.inflate(R.layout.fragment_trusted_networks, container, false);
+        binding = FragmentTrustedNetworksBinding.inflate(inflater, container, false);
 
-        mRecyclerView = rootView.findViewById(R.id.networks_recycler_view);
+        binding.networksRecyclerView.setHasFixedSize(true);
 
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager = new LinearLayoutManager(requireActivity());
+        binding.networksRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter();
         mAdapter.updateList();
-        mRecyclerView.setAdapter(mAdapter);
+        binding.networksRecyclerView.setAdapter(mAdapter);
 
         ActivityResultLauncher<String> permissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
@@ -65,8 +63,7 @@ public class TrustedNetworks extends Fragment {
                     }
                 });
 
-        Button btn = rootView.findViewById(R.id.add_network_btn);
-        btn.setOnClickListener(v -> {
+        binding.addNetworkBtn.setOnClickListener(v -> {
             if (
                     ContextCompat.checkSelfPermission(
                             requireContext(),
@@ -76,7 +73,7 @@ public class TrustedNetworks extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(null);
                 builder.setMessage(R.string.trusted_networks_location_permission);
-                LinearLayout layout = new LinearLayout(getActivity());
+                LinearLayout layout = new LinearLayout(requireActivity());
                 layout.setOrientation(LinearLayout.VERTICAL);
                 builder.setView(layout);
 
@@ -90,7 +87,7 @@ public class TrustedNetworks extends Fragment {
             }
         });
 
-        return rootView;
+        return binding.getRoot();
     }
 
     private void addCurrentNetwork() {
@@ -157,7 +154,7 @@ public class TrustedNetworks extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(null);
                 builder.setMessage(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_confirm) + mDataset.get(holder.getBindingAdapterPosition()).getSsid() + "?");
-                LinearLayout layout = new LinearLayout(getActivity());
+                LinearLayout layout = new LinearLayout(requireActivity());
                 layout.setOrientation(LinearLayout.VERTICAL);
                 builder.setView(layout);
 
@@ -193,5 +190,11 @@ public class TrustedNetworks extends Fragment {
         public int getItemCount() {
             return mDataset.size();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

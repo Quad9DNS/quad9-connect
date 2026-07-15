@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +35,7 @@ import com.quad9.aegis.Model.TraceRouteCopied;
 import com.quad9.aegis.Model.TrafficContract;
 import com.quad9.aegis.Model.TrafficDbHelper;
 import com.quad9.aegis.R;
+import com.quad9.aegis.databinding.FragmentDebugBinding;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -47,17 +46,8 @@ import java.util.Collections;
  * A simple {@link Fragment} subclass.
  */
 public class Debug extends Fragment {
-    private Button btn_crash_test;
-    private Button btn_test;
-    private Button btn_restart_test;
-    private Button btn_edns_code;
-    private Button btn_edns_payload;
-    private Button btn_counts;
-    private Button btn_reconnect_test;
-    private Button btn_log;
-    private Button btn_distribution;
-    private Button btn_dnsset;
-    private ProgressBar pb;
+
+    private FragmentDebugBinding binding;
     int CONNECTION = 4280;
     int PACKET = 200;
 
@@ -70,113 +60,89 @@ public class Debug extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_debug, container, false);
+        binding = FragmentDebugBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        btn_crash_test = view.findViewById(R.id.btn_crash);
-        btn_test = view.findViewById(R.id.btn_test);
-        btn_restart_test = view.findViewById(R.id.btn_test_restart);
-        btn_edns_code = view.findViewById(R.id.btn_edns_code);
-        btn_edns_payload = view.findViewById(R.id.btn_edns_payload);
-        btn_counts = view.findViewById(R.id.btn_counts);
-        btn_reconnect_test = view.findViewById(R.id.btn_reconnect);
-        btn_log = view.findViewById(R.id.btn_log);
-        btn_distribution = view.findViewById(R.id.btn_distribution);
-        btn_dnsset = view.findViewById(R.id.btn_dnsset);
 
-        pb = view.findViewById(R.id.progressBar_cyclic);
-        btn_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment nextFrag = (Fragment) new Test();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        binding.btnTest.setOnClickListener(v -> {
+            Fragment nextFrag = (Fragment) new Test();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, nextFrag)
+                    .addToBackStack(null)
+                    .commit();
         });
         if (Analytics.INSTANCE.isSupported()) {
-            btn_crash_test.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Analytics.INSTANCE.testCrash();
-                }
-            });
+            binding.btnCrash.setOnClickListener(v -> Analytics.INSTANCE.testCrash());
         } else {
-            btn_crash_test.setVisibility(View.GONE);
+            binding.btnCrash.setVisibility(View.GONE);
         }
 
-        btn_reconnect_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent("restartService");
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-            }
+        binding.btnReconnect.setOnClickListener(v -> {
+            Intent intent = new Intent("restartService");
+            LocalBroadcastManager.getInstance(requireActivity()).sendBroadcast(intent);
         });
-        btn_restart_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                String title = null;
+        binding.btnTestRestart.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            String title = null;
 
-                builder.setTitle(title);
-                builder.setMessage("Set Dns server");
-                LinearLayout layout = new LinearLayout(getActivity());
-                layout.setOrientation(LinearLayout.VERTICAL);
-                final EditText domain = new EditText(getActivity());
-                domain.setHint("9.9.9.9");
+            builder.setTitle(title);
+            builder.setMessage("Set Dns server");
+            LinearLayout layout = new LinearLayout(requireActivity());
+            layout.setOrientation(LinearLayout.VERTICAL);
+            final EditText domain = new EditText(requireActivity());
+            domain.setHint("9.9.9.9");
 
-                layout.addView(domain);
+            layout.addView(domain);
 
-                builder.setView(layout);
+            builder.setView(layout);
 
-                builder.setPositiveButton(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_add), null);
-                builder.setNegativeButton(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+            builder.setPositiveButton(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_add), null);
+            builder.setNegativeButton(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_cancel), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
 
-                    }
-                });
+                }
+            });
 
-                final AlertDialog mAlertDialog = builder.create();
-                mAlertDialog.setOnShowListener(dialog -> {
+            final AlertDialog mAlertDialog = builder.create();
+            mAlertDialog.setOnShowListener(dialog -> {
 
-                    Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
 
-                    if (DnsSeeker.getStatus().isCustomServer()) {
-                        domain.setText(DnsSeeker.getStatus().getServerName());
-                    }
-                    b.setOnClickListener(view1 -> {
-                        if (domain.getText() != null) {
-                            String domainText = domain.getText().toString();
-                            new Thread(() -> {
-                                try {
-                                    InetAddress address = InetAddress.getByName(domainText);
-                                    ServerSelector.setBlockingPool(Collections.singletonList(domainText));
-                                    DnsSeeker.getStatus().setServerIp(address.getHostAddress());
-                                } catch (UnknownHostException e) {
-                                    if (isAdded()) {
-                                        Toast.makeText(requireContext(), "Invalid DNS server", Toast.LENGTH_SHORT).show();
-                                    }
+                if (DnsSeeker.getStatus().isCustomServer()) {
+                    domain.setText(DnsSeeker.getStatus().getServerName());
+                }
+                b.setOnClickListener(view1 -> {
+                    if (domain.getText() != null) {
+                        String domainText = domain.getText().toString();
+                        new Thread(() -> {
+                            try {
+                                InetAddress address = InetAddress.getByName(domainText);
+                                ServerSelector.setBlockingPool(Collections.singletonList(domainText));
+                                DnsSeeker.getStatus().setServerIp(address.getHostAddress());
+                            } catch (UnknownHostException e) {
+                                if (isAdded()) {
+                                    Toast.makeText(requireContext(), "Invalid DNS server", Toast.LENGTH_SHORT).show();
                                 }
-                                mAlertDialog.dismiss();
-                            }).start();
-                        }
-                    });
+                            }
+                            mAlertDialog.dismiss();
+                        }).start();
+                    }
                 });
-                mAlertDialog.show();
-            }
+            });
+            mAlertDialog.show();
         });
-        btn_edns_code.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        binding.btnEdnsCode.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             String title = null;
 
             builder.setTitle(title);
             builder.setMessage("Set EDNS option code");
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            final EditText code = new EditText(getActivity());
+            final EditText code = new EditText(requireActivity());
             code.setHint("0xFEFE");
 
             layout.addView(code);
@@ -214,15 +180,15 @@ public class Debug extends Fragment {
             mAlertDialog.show();
 
         });
-        btn_edns_payload.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        binding.btnEdnsPayload.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             String title = null;
 
             builder.setTitle(title);
             builder.setMessage("Set EDNS option payload");
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            final EditText payload = new EditText(getActivity());
+            final EditText payload = new EditText(requireActivity());
             payload.setHint("UTF-8 payload");
 
             layout.addView(payload);
@@ -251,47 +217,39 @@ public class Debug extends Fragment {
             mAlertDialog.show();
 
         });
-        btn_counts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.btnCounts.setOnClickListener(v -> {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.btn_show_counts);
-                ArrayList<Integer> a3600 = getTrafficStats(1);
-                ArrayList<Integer> a86400 = getTrafficStats(24);
-                builder.setMessage(String.format(getResources().getString(R.string.dia_traffic),
-                        a3600.get(0),
-                        a3600.get(1),
-                        a3600.get(2),
-                        calculateKB(a3600),
-                        a86400.get(0),
-                        a86400.get(1),
-                        a86400.get(2),
-                        calculateKB(a86400))
-                );
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //action on dialog close
-                    }
-                });
-                builder.show();
-            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setTitle(R.string.btn_show_counts);
+            ArrayList<Integer> a3600 = getTrafficStats(1);
+            ArrayList<Integer> a86400 = getTrafficStats(24);
+            builder.setMessage(String.format(getResources().getString(R.string.dia_traffic),
+                    a3600.get(0),
+                    a3600.get(1),
+                    a3600.get(2),
+                    calculateKB(a3600),
+                    a86400.get(0),
+                    a86400.get(1),
+                    a86400.get(2),
+                    calculateKB(a86400))
+            );
+            builder.setPositiveButton("OK", (dialog, id) -> {
+                //action on dialog close
+            });
+            builder.show();
         });
-        btn_log.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),
-                        LogActivity.class);
-                startActivity(intent);
-            }
+        binding.btnLog.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(),
+                    LogActivity.class);
+            startActivity(intent);
         });
 
-        btn_dnsset.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        binding.btnDnsset.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setMessage("Traffic send to this ips are routed into app because they are labeled as dns server.");
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            TextView textView = new TextView(getActivity());
+            TextView textView = new TextView(requireActivity());
             textView.setText(DnsSeeker.getStatus().getDNSSet().toString());
 
             layout.addView(textView);
@@ -300,52 +258,49 @@ public class Debug extends Fragment {
             mAlertDialog.show();
 
         });
-        btn_distribution.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TraceRouteCopied.Callback callback = new TraceRouteCopied.Callback() {
-                    public void complete(TraceRouteCopied.Result r) {
-                        pb.setVisibility(View.INVISIBLE);
-                        Looper.prepare();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle(R.string.btn_test_traceroute);
-                        builder.setMessage(r.content());
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //action on dialog close
-                            }
-                        });
-                        builder.show();
-                        Log.d("Debug", r.content() + " registered successfully!!\n");
-                        Looper.loop();
-                    }
-
-                    public void update(TraceRouteCopied.Result r) {
-                    }
-
-                };
-                pb.setVisibility(View.VISIBLE);
-                TraceRouteCopied.start("9.9.9.9", callback);
-
-                /*
-                int[] time_d = DnsSeeker.getStatus().getTimeDistribution();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.caution);
-
-                if(time_d!=null){
-                    builder.setMessage(String.format(getResources().getString(R.string.test_distribution),time_d[0],time_d[1],time_d[2],time_d[3],time_d[4]));
-                }else{
-                    builder.setMessage("No recent Queries");
+        binding.btnDistribution.setOnClickListener(v -> {
+            TraceRouteCopied.Callback callback = new TraceRouteCopied.Callback() {
+                public void complete(TraceRouteCopied.Result r) {
+                    binding.progressBarCyclic.setVisibility(View.INVISIBLE);
+                    Looper.prepare();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                    builder.setTitle(R.string.btn_test_traceroute);
+                    builder.setMessage(r.content());
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //action on dialog close
+                        }
+                    });
+                    builder.show();
+                    Log.d("Debug", r.content() + " registered successfully!!\n");
+                    Looper.loop();
                 }
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //action on dialog close
-                    }
-                });
-                builder.show();
 
-                 */
+                public void update(TraceRouteCopied.Result r) {
+                }
+
+            };
+            binding.progressBarCyclic.setVisibility(View.VISIBLE);
+            TraceRouteCopied.start("9.9.9.9", callback);
+
+            /*
+            int[] time_d = DnsSeeker.getStatus().getTimeDistribution();
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setTitle(R.string.caution);
+
+            if(time_d!=null){
+                builder.setMessage(String.format(getResources().getString(R.string.test_distribution),time_d[0],time_d[1],time_d[2],time_d[3],time_d[4]));
+            }else{
+                builder.setMessage("No recent Queries");
             }
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //action on dialog close
+                }
+            });
+            builder.show();
+
+             */
         });
     }
 
@@ -394,18 +349,6 @@ public class Debug extends Fragment {
         }
     }
 
-    private void openNetworkSettings() {
-        try {
-            Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            try {
-            } catch (ActivityNotFoundException ex) {
-            }
-        }
-    }
-
     private double calculateKB(ArrayList<Integer> a) {
         int allBytes =
                 a.get(0) * CONNECTION +
@@ -413,6 +356,12 @@ public class Debug extends Fragment {
                         a.get(2) * PACKET;
         Log.d("calculate", "" + (float) allBytes / 1000 / 1000);
         return (float) allBytes / 1000 / 1000;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
 }

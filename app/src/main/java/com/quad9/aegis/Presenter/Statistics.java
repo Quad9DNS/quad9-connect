@@ -7,7 +7,6 @@ import static com.quad9.aegis.Model.GlobalVariables.FAILED;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,19 +15,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.quad9.aegis.Model.DnsSeeker;
 import com.quad9.aegis.R;
+import com.quad9.aegis.databinding.FragmentStatisticsBinding;
 
 import java.text.DecimalFormat;
 
@@ -41,16 +37,7 @@ public class Statistics extends Fragment {
     int success = 0;
     int fail = 0;
     int block = 0;
-    View circle_success;
-    TextView circle_success_text;
-    TextView circle_success_rate;
-    View circle_block;
-    TextView circle_block_text;
-    TextView circle_block_rate;
-    View circle_fail;
-    TextView circle_fail_text;
-    TextView circle_fail_rate;
-    TextView in_total;
+    private FragmentStatisticsBinding binding;
 
     public Statistics() {
         // Required empty public constructor
@@ -64,115 +51,80 @@ public class Statistics extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View mView = inflater.inflate(R.layout.fragment_statistics, container, false);
-        final Button restBtn = mView.findViewById(R.id.btn_reset_counter);
-        in_total = mView.findViewById(R.id.in_total);
-        circle_success = mView.findViewById(R.id.circle_success_click_area);
-        circle_success_text = mView.findViewById(R.id.circle_success_text);
-        circle_success_rate = mView.findViewById(R.id.circle_success_rate);
-        circle_block = mView.findViewById(R.id.circle_blocked_click_area);
-        circle_block_text = mView.findViewById(R.id.circle_blocked_text);
-        circle_block_rate = mView.findViewById(R.id.circle_blocked_rate);
-        circle_fail = mView.findViewById(R.id.circle_failed_click_area);
-        circle_fail_text = mView.findViewById(R.id.circle_failed_text);
-        circle_fail_rate = mView.findViewById(R.id.circle_failed_rate);
+        binding = FragmentStatisticsBinding.inflate(inflater, container, false);
 
-        restBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.caution);
-                builder.setMessage(R.string.reset_dialog);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //action on dialog close
-                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putInt("success", 0);
-                        editor.putInt("fail", 0);
-                        editor.putInt("total_q", 0);
-                        editor.putInt("blocked_q", 0);
-                        editor.apply();
-                        sendResetToActivity();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.detach(getInstance()).attach(getInstance()).commit();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //action on dialog close
-                    }
-                });
-                builder.show();
+        binding.btnResetCounter.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setTitle(R.string.caution);
+            builder.setMessage(R.string.reset_dialog);
+            builder.setPositiveButton("OK", (dialog, id) -> {
+                //action on dialog close
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(requireActivity());
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putInt("success", 0);
+                editor.putInt("fail", 0);
+                editor.putInt("total_q", 0);
+                editor.putInt("blocked_q", 0);
+                editor.apply();
+                sendResetToActivity();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(getInstance()).attach(getInstance()).commit();
+            });
+            builder.setNegativeButton("Cancel", (dialog, id) -> {
+                //action on dialog close
+            });
+            builder.show();
 
-                //button.setSummary("All time queries : " + PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("total_q",0));
-            }
+            //button.setSummary("All time queries : " + PreferenceManager.getDefaultSharedPreferences(requireActivity()).getInt("total_q",0));
         });
-        circle_success.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("isBlocked", ALL);
-                Fragment nextFrag = new Record();
-                nextFrag.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, nextFrag)
-                        .hide(Statistics.this)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        binding.circleSuccessClickArea.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("isBlocked", ALL);
+            Fragment nextFrag = new Record();
+            nextFrag.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, nextFrag)
+                    .hide(Statistics.this)
+                    .addToBackStack(null)
+                    .commit();
         });
-        circle_block.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                boolean blocked = true;
-                bundle.putInt("isBlocked", BLOCKED);
-                Fragment nextFrag = new Record();
-                nextFrag.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, nextFrag)
-                        .hide(Statistics.this)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        binding.circleBlockedClickArea.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            boolean blocked = true;
+            bundle.putInt("isBlocked", BLOCKED);
+            Fragment nextFrag = new Record();
+            nextFrag.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, nextFrag)
+                    .hide(Statistics.this)
+                    .addToBackStack(null)
+                    .commit();
         });
-        circle_fail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("isBlocked", FAILED);
-                Fragment nextFrag = new Record();
-                nextFrag.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, nextFrag)
-                        .hide(Statistics.this)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        binding.circleFailedClickArea.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("isBlocked", FAILED);
+            Fragment nextFrag = new Record();
+            nextFrag.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, nextFrag)
+                    .hide(Statistics.this)
+                    .addToBackStack(null)
+                    .commit();
         });
         makeGraph();
 
-        return mView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        return binding.getRoot();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
-        //        updateReceiver, new IntentFilter("UpdateRecord"));
         makeGraph();
     }
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(updateReceiver);
         super.onPause();
 
     }
@@ -186,12 +138,7 @@ public class Statistics extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                makeGraph();
-                            }
-                        });
+                        requireActivity().runOnUiThread(() -> makeGraph());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -200,10 +147,10 @@ public class Statistics extends Fragment {
         }
     };
 
-    public void prepareData(int a, int b, int c) {
+    public void prepareData() {
 
         int total = success + fail;
-        in_total.setText(String.format(getResources().getString(R.string.in_total), total));
+        binding.inTotal.setText(String.format(getResources().getString(R.string.in_total), total));
 
         // Prevent dividing 0.
         if (total == 0) {
@@ -216,60 +163,71 @@ public class Statistics extends Fragment {
 
         DecimalFormat df = new DecimalFormat("##.#%");
 
-        circle_success_text.setText(String.valueOf(success - block));
-        LinearLayout.LayoutParams paramsS = new LinearLayout.LayoutParams(
-                circle_success.getLayoutParams());
-
-        paramsS.weight = (float) r_s * 70 + 50;
-        circle_success.setLayoutParams(paramsS);
-        String temp = "";
-        Log.d("Show Stat layout", paramsS.debug(temp));
+        binding.circleSuccessText.setText(String.valueOf(success - block));
+        float scale_s = 0.5f + r_s;
+        binding.circleSuccess.setScaleX(scale_s);
+        binding.circleSuccess.setScaleY(scale_s);
+//        ConstraintLayout.LayoutParams paramsS = new ConstraintLayout.LayoutParams(
+//                binding.circleSuccessText.getLayoutParams());
+//        int marginS = Math.max(60, (int) (30 / r_s));
+//        paramsS.setMargins(marginS, marginS, marginS, marginS);
+//        binding.circleSuccessText.setLayoutParams(paramsS);
         if (r_s > 0 && r_s < 0.1) {
-            circle_success_rate.setText("< 0.1%");
+            binding.circleSuccessRate.setText("< 0.1%");
         } else {
-            circle_success_rate.setText(df.format(r_s));
+            binding.circleSuccessRate.setText(df.format(r_s));
         }
 
-        circle_block_text.setText(String.valueOf(block));
-        LinearLayout.LayoutParams paramsB = new LinearLayout.LayoutParams(
-                circle_block.getLayoutParams());
-        paramsB.weight = r_b * 70 + 60;
+        binding.circleBlockedText.setText(String.valueOf(block));
+//        float scale_b = 0.5f + r_b;
+//        binding.circlb.setScaleX(scale_b);
+//        binding.circleSuccess.setScaleY(scale_b);
+//        ConstraintLayout.LayoutParams paramsB = new ConstraintLayout.LayoutParams(
+//                binding.circleBlockedText.getLayoutParams());
+//        int marginB = Math.max(60, (int) (30 / r_b));
+//        paramsB.setMargins(marginB, marginB, marginB, marginB);
+//        binding.circleBlockedText.setLayoutParams(paramsB);
 
-        circle_block.setLayoutParams(paramsB);
         if (r_b > 0 && r_b < 0.1) {
-            circle_block_rate.setText("< 0.1%");
+            binding.circleBlockedRate.setText("< 0.1%");
         } else {
-            circle_block_rate.setText(df.format(r_b));
+            binding.circleBlockedRate.setText(df.format(r_b));
         }
 
-        circle_fail_text.setText(String.valueOf(fail));
-        LinearLayout.LayoutParams paramsF = new LinearLayout.LayoutParams(
-                circle_fail.getLayoutParams());
-        paramsF.weight = r_f * 70 + 60;
+        binding.circleFailedText.setText(String.valueOf(fail));
+//        binding.circleFailedText.setScaleX(1 + );
+//        ConstraintLayout.LayoutParams paramsF = new ConstraintLayout.LayoutParams(
+//                binding.circleFailedText.getLayoutParams());
+//        int marginF = Math.max(60, (int) (30 / r_f));
+//        paramsF.setMargins(marginF, marginF, marginF, marginF);
+//        binding.circleFailedText.setLayoutParams(paramsF);
 
-        circle_fail.setLayoutParams(paramsF);
         if (r_f > 0 && r_f < 0.1) {
-            circle_fail_rate.setText("< 0.1%");
+            binding.circleFailedRate.setText("< 0.1%");
         } else {
-            circle_fail_rate.setText(df.format(r_f));
+            binding.circleFailedRate.setText(df.format(r_f));
         }
-
-
     }
 
     private void makeGraph() {
         success = DnsSeeker.getInstance().getSuccessCount();
         fail = DnsSeeker.getInstance().getFailCount();
         block = DnsSeeker.getInstance().getBlockedCount();
-        if (success == 0) {
-        } else {
-            prepareData(success, fail, block);
+        if (success != 0) {
+            prepareData();
         }
     }
 
     private void sendResetToActivity() {
         Intent intent = new Intent("ResetStats");
 
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(requireActivity()).sendBroadcast(intent);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
