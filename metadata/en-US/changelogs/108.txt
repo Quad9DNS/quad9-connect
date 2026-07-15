@@ -1,0 +1,4 @@
+- The app now targets Android 17 (SDK 37)
+- Cryptographically secure random number generator is now used when generating DNS message IDs (a test DNS message is created by the app to verify connection to the Quad9 DNS)
+- Minor UI scaling fixes in the statistics page
+- Various minor memory leaks and issues fixed throughout the app
