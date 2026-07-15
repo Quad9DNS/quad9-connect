@@ -186,21 +186,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        // For Splash page
-        Thread t = new Thread(() -> {
-            SharedPreferences getPrefs = PreferenceManager
-                    .getDefaultSharedPreferences(getBaseContext());
-            boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
-            if (isFirstStart) {
-                final Intent i = new Intent(MainActivity.this, IntroActivity.class);
+        SharedPreferences getPrefs = PreferenceManager
+                .getDefaultSharedPreferences(getBaseContext());
+        boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+        if (isFirstStart) {
+            final Intent i = new Intent(MainActivity.this, IntroActivity.class);
 
-                runOnUiThread(() -> startActivity(i));
-                SharedPreferences.Editor e = getPrefs.edit();
-                e.putBoolean("firstStart", false);
-                e.apply();
-            }
-        });
-        t.start();
+            startActivity(i);
+            SharedPreferences.Editor e = getPrefs.edit();
+            e.putBoolean("firstStart", false);
+            e.apply();
+        }
 
         // Toolbar and Drawer setup
 
