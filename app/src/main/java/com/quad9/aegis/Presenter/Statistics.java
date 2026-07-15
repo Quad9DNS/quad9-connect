@@ -152,26 +152,24 @@ public class Statistics extends Fragment {
         int total = success + fail;
         binding.inTotal.setText(String.format(getResources().getString(R.string.in_total), total));
 
+
+        float r_s = 0.33f;
+        float r_f = 0.33f;
+        float r_b = 0.33f;
         // Prevent dividing 0.
-        if (total == 0) {
-            total = 1;
+        if (total != 0) {
+            r_s = (float) (success - block) / (float) total;
+            r_f = (float) fail / (float) total;
+            r_b = (float) block / (float) total;
         }
-        float r_s = (float) (success - block) / (float) total;
-        float r_f = (float) fail / (float) total;
-        float r_b = (float) block / (float) total;
         Log.d("statistic", "preapring Data: " + String.format("r_s: %f, r_f: %f, r_b: %f ", r_s, r_f, r_b));
 
         DecimalFormat df = new DecimalFormat("##.#%");
 
         binding.circleSuccessText.setText(String.valueOf(success - block));
-        float scale_s = 0.5f + r_s;
+        float scale_s = 0.75f + 0.75f * r_s;
         binding.circleSuccess.setScaleX(scale_s);
         binding.circleSuccess.setScaleY(scale_s);
-//        ConstraintLayout.LayoutParams paramsS = new ConstraintLayout.LayoutParams(
-//                binding.circleSuccessText.getLayoutParams());
-//        int marginS = Math.max(60, (int) (30 / r_s));
-//        paramsS.setMargins(marginS, marginS, marginS, marginS);
-//        binding.circleSuccessText.setLayoutParams(paramsS);
         if (r_s > 0 && r_s < 0.1) {
             binding.circleSuccessRate.setText("< 0.1%");
         } else {
@@ -179,14 +177,9 @@ public class Statistics extends Fragment {
         }
 
         binding.circleBlockedText.setText(String.valueOf(block));
-//        float scale_b = 0.5f + r_b;
-//        binding.circlb.setScaleX(scale_b);
-//        binding.circleSuccess.setScaleY(scale_b);
-//        ConstraintLayout.LayoutParams paramsB = new ConstraintLayout.LayoutParams(
-//                binding.circleBlockedText.getLayoutParams());
-//        int marginB = Math.max(60, (int) (30 / r_b));
-//        paramsB.setMargins(marginB, marginB, marginB, marginB);
-//        binding.circleBlockedText.setLayoutParams(paramsB);
+       float scale_b = 0.75f + 0.75f * r_b;
+       binding.circleBlocked.setScaleX(scale_b);
+       binding.circleBlocked.setScaleY(scale_b);
 
         if (r_b > 0 && r_b < 0.1) {
             binding.circleBlockedRate.setText("< 0.1%");
@@ -195,12 +188,9 @@ public class Statistics extends Fragment {
         }
 
         binding.circleFailedText.setText(String.valueOf(fail));
-//        binding.circleFailedText.setScaleX(1 + );
-//        ConstraintLayout.LayoutParams paramsF = new ConstraintLayout.LayoutParams(
-//                binding.circleFailedText.getLayoutParams());
-//        int marginF = Math.max(60, (int) (30 / r_f));
-//        paramsF.setMargins(marginF, marginF, marginF, marginF);
-//        binding.circleFailedText.setLayoutParams(paramsF);
+       float scale_f = 0.75f + 0.75f * r_f;
+       binding.circleFailed.setScaleX(scale_f);
+       binding.circleFailed.setScaleY(scale_f);
 
         if (r_f > 0 && r_f < 0.1) {
             binding.circleFailedRate.setText("< 0.1%");
