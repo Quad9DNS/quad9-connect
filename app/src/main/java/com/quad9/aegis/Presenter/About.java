@@ -10,20 +10,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.quad9.aegis.Model.DnsSeeker;
 import com.quad9.aegis.R;
+import com.quad9.aegis.databinding.FragmentAboutBinding;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class About extends Fragment {
-    private View rootView;
     private int debugCounter = 0;
+    private FragmentAboutBinding binding;
 
     public About() {
         // Required empty public constructor
@@ -33,37 +32,31 @@ public class About extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_about, container, false);
-        TextView appVersion = rootView.findViewById(R.id.app_version);
-        appVersion.setText(getLocalVersion(DnsSeeker.getInstance().getApplicationContext()));
-        ImageView icon = rootView.findViewById(R.id.imageView);
-        TextView privacyBtn = rootView.findViewById(R.id.privacyBtn);
-        privacyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v1) {
-                Uri uri = Uri.parse("https://quad9.net/service/privacy");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+        binding = FragmentAboutBinding.inflate(inflater, container, false);
+        binding.appVersion.setText(getLocalVersion(DnsSeeker.getInstance().getApplicationContext()));
+        binding.privacyBtn.setOnClickListener(v1 -> {
+            Uri uri = Uri.parse("https://quad9.net/service/privacy");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+        binding.imageView.setOnClickListener(v1 -> {
+            debugCounter++;
+            if (debugCounter >= 9) {
+                Fragment nextFrag = new Debug();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, nextFrag)
+                        .hide(About.this)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
-        icon.setOnClickListener(new View.OnClickListener() {
+        return binding.getRoot();
+    }
 
-            @Override
-            public void onClick(View v1) {
-                debugCounter++;
-                if (debugCounter >= 9) {
-                    Fragment nextFrag = new Debug();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, nextFrag)
-                            .hide(About.this)
-                            .addToBackStack(null)
-                            .commit();
-                }
-            }
-
-        });
-        return rootView;
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     public static String getLocalVersion(Context ctx) {

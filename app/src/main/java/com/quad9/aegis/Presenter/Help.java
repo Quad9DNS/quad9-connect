@@ -18,8 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -29,6 +27,7 @@ import com.quad9.aegis.Model.DnsSeeker;
 import com.quad9.aegis.Model.TestQuad9;
 import com.quad9.aegis.Model.TraceRouteCopied;
 import com.quad9.aegis.R;
+import com.quad9.aegis.databinding.FragmentSupportBinding;
 
 import java.util.Locale;
 
@@ -36,14 +35,11 @@ import java.util.Locale;
  * A simple {@link Fragment} subclass.
  */
 public class Help extends Fragment {
-    private Button btn_send_mail = null;
-    private Button btn_gen_traceroute = null;
-
+    private FragmentSupportBinding binding;
     private String idserver = "";
-    private ProgressBar pb = null;
     private Handler handler;
     TraceRouteCopied.Result r;
-    private TestQuad9.Callback testCallback = s -> idserver = s;
+    private final TestQuad9.Callback testCallback = s -> idserver = s;
 
     public Help() {
         // Required empty public constructor
@@ -53,40 +49,28 @@ public class Help extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        return inflater.inflate(R.layout.fragment_support, container, false);
+        binding = FragmentSupportBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         // We need to handle NetworkOnMainThreadException issue, it used to work because in
         // we happen to call Connection in a callback function before.
-        btn_send_mail = getView().findViewById(R.id.btn_send_mail);
-        btn_gen_traceroute = getView().findViewById(R.id.btn_gen_traceroute);
-        pb = getView().findViewById(R.id.progressBar_cyclic);
-        btn_send_mail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.btnSendMail.setOnClickListener(v -> {
 
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL, new String[]{"android-support@quad9.net"});
-                i.putExtra(Intent.EXTRA_SUBJECT, "support for app");
-                i.putExtra(Intent.EXTRA_TEXT, generateInfo());
-                try {
-                    startActivity(Intent.createChooser(i, "Send mail..."));
-                } catch (android.content.ActivityNotFoundException ex) {
-                    DnsSeeker.popToast(R.string.toast_no_mail);
-                }
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("message/rfc822");
+            i.putExtra(Intent.EXTRA_EMAIL, new String[]{"android-support@quad9.net"});
+            i.putExtra(Intent.EXTRA_SUBJECT, "support for app");
+            i.putExtra(Intent.EXTRA_TEXT, generateInfo());
+            try {
+                startActivity(Intent.createChooser(i, "Send mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                DnsSeeker.popToast(R.string.toast_no_mail);
             }
         });
-        btn_gen_traceroute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generateTraceroute();
-            }
-        });
+        binding.btnGenTraceroute.setOnClickListener(v -> generateTraceroute());
     }
 
     private String generateInfo() {
@@ -127,7 +111,7 @@ public class Help extends Fragment {
     }
 
     private String capitalize(String s) {
-        if (s == null || s.length() == 0) {
+        if (s == null || s.isEmpty()) {
             return "";
         }
         char first = s.charAt(0);
@@ -139,15 +123,15 @@ public class Help extends Fragment {
     }
 
     private void generateTraceroute() {
-        pb.setVisibility(View.VISIBLE);
+        binding.progressBarCyclic.setVisibility(View.VISIBLE);
         AlertDialog alertDialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(R.string.btn_test_traceroute);
         builder.setMessage("...");
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 TraceRouteCopied.stop();
-                pb.setVisibility(View.INVISIBLE);
+                binding.progressBarCyclic.setVisibility(View.INVISIBLE);
                 dialog.dismiss();
             }
         });
@@ -173,13 +157,10 @@ public class Help extends Fragment {
                 Looper.prepare();
                 update(r);
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Dismiss the Dialog
-                            pb.setVisibility(View.INVISIBLE);
-                            // start selected activity
-                        }
+                    getActivity().runOnUiThread(() -> {
+                        // Dismiss the Dialog
+                        binding.progressBarCyclic.setVisibility(View.INVISIBLE);
+                        // start selected activity
                     });
                 }
                 Looper.loop();
@@ -193,13 +174,16 @@ public class Help extends Fragment {
         TraceRouteCopied.start("9.9.9.9", callback);
     }
 
-    private Runnable Connection = new Runnable() {
-        @Override
-        public void run() {
-            Log.d("Zzz", "start connect");
-            TestQuad9.dig_over_tls(DnsSeeker.getInstance().getApplicationContext(), testCallback);
-        }
+    private Runnable Connection = () -> {
+        Log.d("Zzz", "start connect");
+        TestQuad9.dig_over_tls(DnsSeeker.getInstance().getApplicationContext(), testCallback);
     };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
 
 
