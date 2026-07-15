@@ -50,7 +50,7 @@ public class TrustedNetworks extends Fragment {
 
         binding.networksRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(requireActivity());
         binding.networksRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter();
         mAdapter.updateList();
@@ -73,7 +73,7 @@ public class TrustedNetworks extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(null);
                 builder.setMessage(R.string.trusted_networks_location_permission);
-                LinearLayout layout = new LinearLayout(getActivity());
+                LinearLayout layout = new LinearLayout(requireActivity());
                 layout.setOrientation(LinearLayout.VERTICAL);
                 builder.setView(layout);
 
@@ -154,7 +154,7 @@ public class TrustedNetworks extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(null);
                 builder.setMessage(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_confirm) + mDataset.get(holder.getBindingAdapterPosition()).getSsid() + "?");
-                LinearLayout layout = new LinearLayout(getActivity());
+                LinearLayout layout = new LinearLayout(requireActivity());
                 layout.setOrientation(LinearLayout.VERTICAL);
                 builder.setView(layout);
 

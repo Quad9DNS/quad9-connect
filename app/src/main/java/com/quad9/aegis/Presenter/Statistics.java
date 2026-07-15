@@ -54,12 +54,12 @@ public class Statistics extends Fragment {
         binding = FragmentStatisticsBinding.inflate(inflater, container, false);
 
         binding.btnResetCounter.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setTitle(R.string.caution);
             builder.setMessage(R.string.reset_dialog);
             builder.setPositiveButton("OK", (dialog, id) -> {
                 //action on dialog close
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(requireActivity());
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt("success", 0);
                 editor.putInt("fail", 0);
@@ -75,14 +75,14 @@ public class Statistics extends Fragment {
             });
             builder.show();
 
-            //button.setSummary("All time queries : " + PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("total_q",0));
+            //button.setSummary("All time queries : " + PreferenceManager.getDefaultSharedPreferences(requireActivity()).getInt("total_q",0));
         });
         binding.circleSuccessClickArea.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putInt("isBlocked", ALL);
             Fragment nextFrag = new Record();
             nextFrag.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction()
+            requireActivity().getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, nextFrag)
                     .hide(Statistics.this)
                     .addToBackStack(null)
@@ -94,7 +94,7 @@ public class Statistics extends Fragment {
             bundle.putInt("isBlocked", BLOCKED);
             Fragment nextFrag = new Record();
             nextFrag.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction()
+            requireActivity().getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, nextFrag)
                     .hide(Statistics.this)
                     .addToBackStack(null)
@@ -105,7 +105,7 @@ public class Statistics extends Fragment {
             bundle.putInt("isBlocked", FAILED);
             Fragment nextFrag = new Record();
             nextFrag.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction()
+            requireActivity().getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, nextFrag)
                     .hide(Statistics.this)
                     .addToBackStack(null)
@@ -124,7 +124,7 @@ public class Statistics extends Fragment {
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(updateReceiver);
         super.onPause();
 
     }
@@ -138,7 +138,7 @@ public class Statistics extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        getActivity().runOnUiThread(() -> makeGraph());
+                        requireActivity().runOnUiThread(() -> makeGraph());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -221,7 +221,7 @@ public class Statistics extends Fragment {
     private void sendResetToActivity() {
         Intent intent = new Intent("ResetStats");
 
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(requireActivity()).sendBroadcast(intent);
     }
 
 

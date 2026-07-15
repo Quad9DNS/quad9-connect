@@ -40,6 +40,22 @@ public class Home extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        mOnCheckedChangeListener = (buttonView, isChecked) -> {
+            switch (buttonView.getId()) {
+                case R.id.on_off_switch:
+                    Intent intentbr = new Intent("SwitchService");
+                    if (isChecked) {
+                        intentbr.putExtra("key", "beginService");
+                        Log.i(TAG, "Start button turning on");
+                    } else {
+                        intentbr.putExtra("key", "stopService");
+                        Log.i(TAG, "Start button turning off");
+                    }
+                    LocalBroadcastManager.getInstance(DnsSeeker.getInstance()).sendBroadcast(intentbr);
+                    break;
+            }
+        };
+
         return binding.getRoot();
     }
 
@@ -121,41 +137,14 @@ public class Home extends Fragment {
 
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //particleView.resume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //particleView.pause();
-    }
-
-    private static CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
-
-    {
-        mOnCheckedChangeListener = (buttonView, isChecked) -> {
-            switch (buttonView.getId()) {
-                case R.id.on_off_switch:
-                    Intent intentbr = new Intent("SwitchService");
-                    if (isChecked) {
-                        intentbr.putExtra("key", "beginService");
-                        Log.i(TAG, "Start button turning on");
-                    } else {
-                        intentbr.putExtra("key", "stopService");
-                        Log.i(TAG, "Start button turning off");
-                    }
-                    LocalBroadcastManager.getInstance(DnsSeeker.getInstance()).sendBroadcast(intentbr);
-                    break;
-            }
-        };
-    }
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
 
     // Set current layout
     public void onStatusConnected() {
+        if (binding == null) {
+            return;
+        }
+
         Log.i(TAG, "onStatusConnected");
         binding.onOffSwitch.setChecked(true);
         if (DnsSeeker.getStatus().isUsingBlock()) {
@@ -220,7 +209,7 @@ public class Home extends Fragment {
                     binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_check_white_24dp), null, null, null);
                 }
             } else {
-                String temp = String.format(getActivity().getResources().getString(R.string.queries_are_blocked), DnsSeeker.getInstance().getBlockedCount());
+                String temp = String.format(requireActivity().getResources().getString(R.string.queries_are_blocked), DnsSeeker.getInstance().getBlockedCount());
                 if (binding != null) {
                     binding.simpleLog.setText(temp);
                     binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_block_white_24dp), null, null, null);
@@ -234,12 +223,13 @@ public class Home extends Fragment {
         Analytics.INSTANCE.setCustomCrashlyticsKey("CurrentNetwork", currentNetwork);
         Log.d(ConnectionMonitor.TAG, currentNetwork + " connect to: " + s);
         // https://stackoverflow.com/questions/39712117/ui-is-not-updated-during-a-listener-callback-in-android
-        getActivity().runOnUiThread(() -> onStatusConnected());
+        requireActivity().runOnUiThread(this::onStatusConnected);
     };
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        mOnCheckedChangeListener = null;
     }
 }

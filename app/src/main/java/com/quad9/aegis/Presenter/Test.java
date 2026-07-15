@@ -37,21 +37,21 @@ public class Test extends Fragment {
 
             switch (msg.what) {
                 case MSG_UDP_TEST_OK:
-                    //((TextView) getView().findViewById(R.id.test_udp_result)).setText(getActivity().getResources().getString(R.string.pass_test_udp));
+                    //((TextView) getView().findViewById(R.id.test_udp_result)).setText(requireActivity().getResources().getString(R.string.pass_test_udp));
                     break;
                 case MSG_UDP_TEST_FAILED:
-                    ((TextView) getView().findViewById(R.id.test_udp_result)).setText(getActivity().getResources().getString(R.string.fail_test_udp));
+                    ((TextView) getView().findViewById(R.id.test_udp_result)).setText(requireActivity().getResources().getString(R.string.fail_test_udp));
                     binding.testTime.setText(DnsSeeker.getInstance().getResources().getString(R.string.toast_unreachable));
                     binding.ms.setText("");
                     break;
                 case MSG_TLS_TEST_OK:
-                    //((TextView) getView().findViewById(R.id.test_tls_result)).setText(getActivity().getResources().getString(R.string.pass_test_tls));
+                    //((TextView) getView().findViewById(R.id.test_tls_result)).setText(requireActivity().getResources().getString(R.string.pass_test_tls));
                     //test_time.setText("Cannot Reach Quad9 Unencrypted!!");
                     //encrypt_type.setText("DNS over TLS");
                     break;
                 case MSG_TLS_TEST_FAILED:
                     binding.testTlsTime.setText(DnsSeeker.getInstance().getResources().getString(R.string.toast_unreachable));
-                    ((TextView) getView().findViewById(R.id.test_tls_result)).setText(getActivity().getResources().getString(R.string.fail_test_tls));
+                    ((TextView) getView().findViewById(R.id.test_tls_result)).setText(requireActivity().getResources().getString(R.string.fail_test_tls));
                     binding.tlsMs.setText("");
                     break;
 
@@ -79,7 +79,7 @@ public class Test extends Fragment {
         binding.testActivated.setText(String.format(DnsSeeker.getInstance().getResources().getString(R.string.test_activated), DnsSeeker.getStatus().isActive()));
         binding.testConnected.setText(String.format(DnsSeeker.getInstance().getResources().getString(R.string.test_connected), DnsSeeker.getStatus().isConnected()));
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(new MybrRc(), new IntentFilter("TestResult"));
+        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(new MybrRc(), new IntentFilter("TestResult"));
 
         Thread thread = new Thread(Connection);
         thread.start();

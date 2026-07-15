@@ -97,7 +97,7 @@ public class Record extends Fragment {
         // in content do not change the layout size of the RecyclerView
         binding.myRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(requireActivity());
         binding.myRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter(myDataset);
         binding.myRecyclerView.setAdapter(mAdapter);
@@ -148,7 +148,7 @@ public class Record extends Fragment {
         public MyAdapter(List<ResponseRecord> myDataset) {
             Log.d(TAG, "WTF?");
             mDataset = myDataset;
-            binding.myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            binding.myRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         }
 
         // Create new views (invoked by the layout manager)

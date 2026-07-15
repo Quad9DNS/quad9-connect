@@ -51,20 +51,20 @@ public class Whitelist extends Fragment {
         // in content do not change the layout size of the RecyclerView
         binding.whitelistRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(requireActivity());
         binding.whitelistRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter(myDataset);
         binding.whitelistRecyclerView.setAdapter(mAdapter);
 
         binding.addDomainBtn.setOnClickListener((View.OnClickListener) v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             String title = null;
 
             builder.setTitle(title);
             builder.setMessage(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_title));
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            final EditText domain = new EditText(getActivity());
+            final EditText domain = new EditText(requireActivity());
             domain.setHint(DnsSeeker.getInstance().getResources().getString(R.string.whitelist_hint));
 
             layout.addView(domain);

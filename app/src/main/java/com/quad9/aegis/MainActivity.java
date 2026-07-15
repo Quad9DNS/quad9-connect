@@ -31,7 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
@@ -55,6 +54,7 @@ import com.quad9.aegis.Presenter.Questions;
 import com.quad9.aegis.Presenter.Search;
 import com.quad9.aegis.Presenter.Settings;
 import com.quad9.aegis.Presenter.Statistics;
+import com.quad9.aegis.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
@@ -62,15 +62,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String ACTION_CONNECT = "com.quad9.aegis.MainActivity.ACTION_CONNECT";
     public static final String ACTION_DISCONNECT = "com.quad9.aegis.MainActivity.ACTION_DISCONNECT";
 
-    NavigationView navigationView;
+    private ActivityMainBinding binding;
     public static final String HOMETAG = "nav_home";
 
-    private OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
+    private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
             } else {
                 String top = getBackStackNameTop();
                 if (TextUtils.equals(top, HOMETAG)) {
@@ -165,8 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             onBackStackChanged();  // Need this to make state of drawer
             startActivity(intent);
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -174,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Analytics.INSTANCE.initialize(this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
 
@@ -188,39 +187,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // For Splash page
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SharedPreferences getPrefs = PreferenceManager
-                        .getDefaultSharedPreferences(getBaseContext());
-                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
-                if (isFirstStart) {
-                    final Intent i = new Intent(MainActivity.this, IntroActivity.class);
+        Thread t = new Thread(() -> {
+            SharedPreferences getPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(getBaseContext());
+            boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+            if (isFirstStart) {
+                final Intent i = new Intent(MainActivity.this, IntroActivity.class);
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            startActivity(i);
-                        }
-                    });
-                    SharedPreferences.Editor e = getPrefs.edit();
-                    e.putBoolean("firstStart", false);
-                    e.apply();
-                }
+                runOnUiThread(() -> startActivity(i));
+                SharedPreferences.Editor e = getPrefs.edit();
+                e.putBoolean("firstStart", false);
+                e.apply();
             }
         });
         t.start();
 
         // Toolbar and Drawer setup
 
-        setContentView(R.layout.activity_main);
+        setContentView(binding.getRoot());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+        setSupportActionBar(binding.toolbar.getRoot());
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar.getRoot(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        binding.drawerLayout.addDrawerListener(toggle);
+        binding.drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
             }
@@ -242,9 +231,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         toggle.syncState();
 
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_home);
+        binding.navView.setNavigationItemSelectedListener(this);
+        binding.navView.setCheckedItem(R.id.nav_home);
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         // Home is Default entry fragment
         if (savedInstanceState == null) {
@@ -255,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ft.commit();
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(drawer, (v, windowInsets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             mlp.leftMargin = insets.left;
@@ -284,33 +272,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (currentFragment != null) {
             if (currentFragment instanceof Home) {
                 setTitle(R.string.title_home);
-                navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+                binding.navView.getMenu().findItem(R.id.nav_home).setChecked(true);
             } else if (currentFragment instanceof Settings) {
                 setTitle(R.string.title_settings);
-                navigationView.getMenu().findItem(R.id.nav_settings).setChecked(true);
+                binding.navView.getMenu().findItem(R.id.nav_settings).setChecked(true);
             } else if (currentFragment instanceof Statistics) {
                 setTitle(R.string.title_statistics);
-                navigationView.getMenu().findItem(R.id.nav_statistics).setChecked(true);
+                binding.navView.getMenu().findItem(R.id.nav_statistics).setChecked(true);
             } else if (currentFragment instanceof Search) {
                 setTitle(R.string.title_search);
-                navigationView.getMenu().findItem(R.id.nav_search).setChecked(true);
+                binding.navView.getMenu().findItem(R.id.nav_search).setChecked(true);
             } else if (currentFragment instanceof Questions) {
                 setTitle(R.string.title_FAQ);
-                navigationView.getMenu().findItem(R.id.nav_FAQ).setChecked(true);
+                binding.navView.getMenu().findItem(R.id.nav_FAQ).setChecked(true);
             } else if (currentFragment instanceof Help) {
                 setTitle(R.string.title_support);
-                navigationView.getMenu().findItem(R.id.nav_support).setChecked(true);
+                binding.navView.getMenu().findItem(R.id.nav_support).setChecked(true);
             } else if (currentFragment instanceof About) {
                 setTitle(R.string.title_about);
-                navigationView.getMenu().findItem(R.id.nav_about).setChecked(true);
+                binding.navView.getMenu().findItem(R.id.nav_about).setChecked(true);
             }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        backPressedCallback.setEnabled(currentFragment instanceof Home || drawer.isDrawerOpen(GravityCompat.START));
+        backPressedCallback.setEnabled(currentFragment instanceof Home || binding.drawerLayout.isDrawerOpen(GravityCompat.START));
     }
 
-    private BroadcastReceiver switchReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver switchReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 

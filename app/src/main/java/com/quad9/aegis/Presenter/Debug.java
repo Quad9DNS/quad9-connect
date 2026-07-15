@@ -69,7 +69,7 @@ public class Debug extends Fragment {
 
         binding.btnTest.setOnClickListener(v -> {
             Fragment nextFrag = (Fragment) new Test();
-            getActivity().getSupportFragmentManager().beginTransaction()
+            requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, nextFrag)
                     .addToBackStack(null)
                     .commit();
@@ -82,17 +82,17 @@ public class Debug extends Fragment {
 
         binding.btnReconnect.setOnClickListener(v -> {
             Intent intent = new Intent("restartService");
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(requireActivity()).sendBroadcast(intent);
         });
         binding.btnTestRestart.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             String title = null;
 
             builder.setTitle(title);
             builder.setMessage("Set Dns server");
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            final EditText domain = new EditText(getActivity());
+            final EditText domain = new EditText(requireActivity());
             domain.setHint("9.9.9.9");
 
             layout.addView(domain);
@@ -135,14 +135,14 @@ public class Debug extends Fragment {
             mAlertDialog.show();
         });
         binding.btnEdnsCode.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             String title = null;
 
             builder.setTitle(title);
             builder.setMessage("Set EDNS option code");
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            final EditText code = new EditText(getActivity());
+            final EditText code = new EditText(requireActivity());
             code.setHint("0xFEFE");
 
             layout.addView(code);
@@ -181,14 +181,14 @@ public class Debug extends Fragment {
 
         });
         binding.btnEdnsPayload.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             String title = null;
 
             builder.setTitle(title);
             builder.setMessage("Set EDNS option payload");
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            final EditText payload = new EditText(getActivity());
+            final EditText payload = new EditText(requireActivity());
             payload.setHint("UTF-8 payload");
 
             layout.addView(payload);
@@ -219,7 +219,7 @@ public class Debug extends Fragment {
         });
         binding.btnCounts.setOnClickListener(v -> {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setTitle(R.string.btn_show_counts);
             ArrayList<Integer> a3600 = getTrafficStats(1);
             ArrayList<Integer> a86400 = getTrafficStats(24);
@@ -239,17 +239,17 @@ public class Debug extends Fragment {
             builder.show();
         });
         binding.btnLog.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(),
+            Intent intent = new Intent(requireActivity(),
                     LogActivity.class);
             startActivity(intent);
         });
 
         binding.btnDnsset.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setMessage("Traffic send to this ips are routed into app because they are labeled as dns server.");
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(requireActivity());
             layout.setOrientation(LinearLayout.VERTICAL);
-            TextView textView = new TextView(getActivity());
+            TextView textView = new TextView(requireActivity());
             textView.setText(DnsSeeker.getStatus().getDNSSet().toString());
 
             layout.addView(textView);
@@ -263,7 +263,7 @@ public class Debug extends Fragment {
                 public void complete(TraceRouteCopied.Result r) {
                     binding.progressBarCyclic.setVisibility(View.INVISIBLE);
                     Looper.prepare();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                     builder.setTitle(R.string.btn_test_traceroute);
                     builder.setMessage(r.content());
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -285,7 +285,7 @@ public class Debug extends Fragment {
 
             /*
             int[] time_d = DnsSeeker.getStatus().getTimeDistribution();
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setTitle(R.string.caution);
 
             if(time_d!=null){

@@ -156,8 +156,8 @@ public class Help extends Fragment {
             public void complete(TraceRouteCopied.Result r) {
                 Looper.prepare();
                 update(r);
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
+                if (requireActivity() != null) {
+                    requireActivity().runOnUiThread(() -> {
                         // Dismiss the Dialog
                         binding.progressBarCyclic.setVisibility(View.INVISIBLE);
                         // start selected activity

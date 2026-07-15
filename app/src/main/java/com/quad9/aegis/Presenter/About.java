@@ -43,7 +43,7 @@ public class About extends Fragment {
             debugCounter++;
             if (debugCounter >= 9) {
                 Fragment nextFrag = new Debug();
-                getActivity().getSupportFragmentManager().beginTransaction()
+                requireActivity().getSupportFragmentManager().beginTransaction()
                         .add(R.id.content_frame, nextFrag)
                         .hide(About.this)
                         .addToBackStack(null)
