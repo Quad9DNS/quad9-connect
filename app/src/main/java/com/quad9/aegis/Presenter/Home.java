@@ -60,12 +60,6 @@ public class Home extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(updateReceiver);
-        super.onDetach();
-    }
-
-    @Override
     public void onStart() {
 
         // The problem is that button is listened by onCheckChangedListener. We cannot distinguish it is triggered
@@ -83,8 +77,26 @@ public class Home extends Fragment {
             temp = String.format(getResources().getString(R.string.queries_are_sent), DnsSeeker.getInstance().getTotalCount());
         }
         binding.simpleLog.setText(temp);
-        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(
-                updateReceiver, new IntentFilter("ResponseResult"));
+        DnsSeeker.responsesUpdated.observe(getViewLifecycleOwner(), _v -> {
+            if (!DnsSeeker.getStatus().recentBlocking()) {
+                String label;
+                if (DnsSeeker.getStatus().isUsingTLS()) {
+                    label = String.format(getResources().getString(R.string.queries_are_secured), DnsSeeker.getInstance().getTotalCount());
+                } else {
+                    label = String.format(getResources().getString(R.string.queries_are_sent), DnsSeeker.getInstance().getTotalCount());
+                }
+                if (binding != null) {
+                    binding.simpleLog.setText(label);
+                    binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_check_white_24dp), null, null, null);
+                }
+            } else {
+                String label = String.format(requireActivity().getResources().getString(R.string.queries_are_blocked), DnsSeeker.getInstance().getBlockedCount());
+                if (binding != null) {
+                    binding.simpleLog.setText(label);
+                    binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_block_white_24dp), null, null, null);
+                }
+            }
+        });
         binding.simpleLog.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             boolean blocked = false;
@@ -98,28 +110,8 @@ public class Home extends Fragment {
                     .commit();
         });
 
-        if (DnsSeeker.getInstance().getTotalCount() > 200000) {
-            //particleView.setVisibility(View.VISIBLE);
-        }
-
-        BroadcastReceiver networkStatusReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                boolean connected = intent.getBooleanExtra("connected", false);
-                if (connected) {
-                    binding.onOffSwitch.setOnCheckedChangeListener(null);
-                    onStatusConnected();
-                    binding.onOffSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
-                } else {
-                    binding.onOffSwitch.setOnCheckedChangeListener(null);
-                    onStatusOff();
-                    binding.onOffSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
-                }
-            }
-        };
         LocalBroadcastManager.getInstance(DnsSeeker.getInstance()).registerReceiver(
                 networkStatusReceiver, new IntentFilter(GlobalVariables.NetworkStatus));
-
         if (DnsSeeker.getStatus().isActive()) {
             if (DnsSeeker.getStatus().isConnected()) {
                 // btn_start.setOnCheckedChangeListener(null);
@@ -135,6 +127,12 @@ public class Home extends Fragment {
             binding.onOffSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
         }
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(DnsSeeker.getInstance()).unregisterReceiver(networkStatusReceiver);
     }
 
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
@@ -194,29 +192,22 @@ public class Home extends Fragment {
     }
 
 
-    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver networkStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!DnsSeeker.getInstance().getStatus().recentBlocking()) {
-                String temp;
-                if (DnsSeeker.getStatus().isUsingTLS()) {
-                    temp = String.format(getResources().getString(R.string.queries_are_secured), DnsSeeker.getInstance().getTotalCount());
-                } else {
-                    temp = String.format(getResources().getString(R.string.queries_are_sent), DnsSeeker.getInstance().getTotalCount());
-                }
-                if (binding != null) {
-                    binding.simpleLog.setText(temp);
-                    binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_check_white_24dp), null, null, null);
-                }
+            boolean connected = intent.getBooleanExtra("connected", false);
+            if (connected) {
+                binding.onOffSwitch.setOnCheckedChangeListener(null);
+                onStatusConnected();
+                binding.onOffSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
             } else {
-                String temp = String.format(requireActivity().getResources().getString(R.string.queries_are_blocked), DnsSeeker.getInstance().getBlockedCount());
-                if (binding != null) {
-                    binding.simpleLog.setText(temp);
-                    binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_block_white_24dp), null, null, null);
-                }
+                binding.onOffSwitch.setOnCheckedChangeListener(null);
+                onStatusOff();
+                binding.onOffSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
             }
         }
     };
+
     private TestQuad9.Callback getServerCallback = s -> {
         Analytics.INSTANCE.setCustomCrashlyticsKey("CurrentServer", s);
         String currentNetwork = DnsSeeker.getInstance().getConnectionMonitor().getCurrentNetwork();
