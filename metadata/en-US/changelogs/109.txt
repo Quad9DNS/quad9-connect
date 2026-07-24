@@ -1,0 +1,2 @@
+- Fixed a crash on service startup if the app is in background, or gets moved
+	to the background during the process
