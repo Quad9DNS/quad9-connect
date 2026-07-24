@@ -32,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import com.quad9.aegis.BuildConfig;
 import com.quad9.aegis.MainActivity;
 import com.quad9.aegis.R;
+import com.quad9.aegis.util.LiveEvent;
 
 import org.acra.ACRA;
 import org.acra.config.CoreConfigurationBuilder;
@@ -72,6 +73,7 @@ public class DnsSeeker extends Application {
     static List<ResponseRecord> recentResponse = new ArrayList<ResponseRecord>();
     static List<ResponseRecord> blockedResponse = new ArrayList<ResponseRecord>();
     static List<ResponseRecord> failedResponse = new ArrayList<ResponseRecord>();
+    public static LiveEvent<Void> responsesUpdated = new LiveEvent<>();
     static Lock lock = new ReentrantLock();
     static String lastBlockedTime = "";
     static String lastBlockedDomain = "";
@@ -451,8 +453,7 @@ public class DnsSeeker extends Application {
     }
 
     private static void sendUpdateToActivity() {
-        Intent intent = new Intent("ResponseResult");
-        LocalBroadcastManager.getInstance(getInstance().getApplicationContext()).sendBroadcast(intent);
+        responsesUpdated.set();
     }
 
     // The method is called when a wifi connected but cannot get access to quad9.
