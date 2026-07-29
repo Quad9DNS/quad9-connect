@@ -45,7 +45,7 @@ android {
 
 dependencies {
     // Import the BoM for the Firebase platform
-    googleplayImplementation platform('com.google.firebase:firebase-bom:33.9.0')
+    googleplayImplementation platform('com.google.firebase:firebase-bom:34.16.0')
 
     // Add the dependency for the Analytics library
     // When using the BoM, you don't specify versions in Firebase library dependencies
