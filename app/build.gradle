@@ -52,30 +52,30 @@ dependencies {
     googleplayImplementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.activity:activity:1.13.0"
-    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.core:core-ktx:1.19.0'
 
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.code.gson:gson:2.14.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.android.material:material:1.14.0'
 
-    implementation 'org.pcap4j:pcap4j-core:1.7.3'
-    implementation 'org.pcap4j:pcap4j-packetfactory-static:1.7.3'
+    implementation 'org.pcap4j:pcap4j-core:1.8.2'
+    implementation 'org.pcap4j:pcap4j-packetfactory-static:1.8.2'
     implementation 'de.measite.minidns:minidns-core:0.2.4'
     implementation 'de.measite.minidns:minidns-hla:0.2.4'
     implementation 'org.slf4j:slf4j-simple:1.6.6'
 
     googleplayImplementation 'com.google.android.gms:play-services-plus:17.0.0'
 
-    implementation 'ch.acra:acra-mail:5.9.0'
-    implementation 'ch.acra:acra-dialog:5.9.0'
+    implementation 'ch.acra:acra-mail:5.13.1'
+    implementation 'ch.acra:acra-dialog:5.13.1'
 
-    implementation 'org.conscrypt:conscrypt-android:2.2.1'
+    implementation 'org.conscrypt:conscrypt-android:2.6.1'
     implementation 'com.github.AppIntro:AppIntro:v5.1.0'
     googleplayImplementation 'com.google.firebase:firebase-core:21.1.1'
     googleplayImplementation 'com.google.firebase:firebase-analytics'
