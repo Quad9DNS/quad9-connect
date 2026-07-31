@@ -9,6 +9,7 @@ import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.IpV6Packet;
 import org.pcap4j.packet.UdpPacket;
 import org.pcap4j.packet.UnknownPacket;
+import org.pcap4j.packet.namednumber.DnsResourceRecordType;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -23,9 +24,27 @@ import de.measite.minidns.Record;
 public class ResponseParser {
     private static final String TAG = "ResponseParser";
 
-    //private static ResponseParser intance = new ResponseParser();
     static ResponseRecord r = null;
     static IpPacket ipOutPacket = null;
+
+    static {
+        // Register missing QTYPEs from DnsResourceRecordType
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 63, "ZONEMD (Message Digest Over Zone Data)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 64, "SVCB (General-purpose service binding)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 65, "HTTPS (SVCB-compatible type for use with HTTP)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 66, "DSYNC (Endpoint discovery for delegation synchronization)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 67, "HHIT (Hierarchical Host Identity Tag)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 68, "BRID (UAS Broadcast Remote Identification)"));
+
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 128, "NXNAME (NXDOMAIN indicator for Compact Denial of Existence)"));
+
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 259, "DOA (Digital OBject Architecture)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 260, "AMTRELAY (Automatic Multicast TUnnelig Relay)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 261, "RESINFO (Resolver Information as Key/Value Pairs)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 262, "WALLET (Public wallet address)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 263, "CLA (BP Convergence Layer Adapter)"));
+        DnsResourceRecordType.register(new DnsResourceRecordType((short) 264, "IPN (BP Node Number)"));
+    }
 
     ResponseParser() {
 
