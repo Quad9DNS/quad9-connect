@@ -117,7 +117,7 @@
     <string name="p_summary_malicious">Blocks malware, spyware, phishing domains</string>
 
     <string name="p_title_ecs">ECS </string>
-    <string name="p_summary_ecs">Provides: Security blocklist, EDNS Client-Subnet sent.</string>
+    <string name="p_summary_ecs">Somewhat slower. Provides: Security blocklist, EDNS Client-Subnet sent.</string>
 
     <string name="p_title_tls">Encryption</string>
     <string name="p_summary_tls">Protect queries with DNS over TLS</string>
