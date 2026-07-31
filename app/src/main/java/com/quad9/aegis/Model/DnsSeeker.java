@@ -609,7 +609,7 @@ public class DnsSeeker extends Application {
         return new ArrayList<>(recentResponse);
     }
 
-    public List<ResponseRecord> getBlocked() {
+    public static List<ResponseRecord> getBlocked() {
         for (int i = 0; i < blockedResponse.size(); i++) {
             if (blockedResponse.get(i).rawData != null) {
                 blockedResponse.set(i, ResponseParser.parseResponseDetail(blockedResponse.get(i)));
@@ -618,7 +618,7 @@ public class DnsSeeker extends Application {
         return new ArrayList<>(blockedResponse);
     }
 
-    public List<ResponseRecord> getFailedResponse() {
+    public static List<ResponseRecord> getFailedResponse() {
         for (int i = 0; i < failedResponse.size(); i++) {
             if (failedResponse.get(i) != null && failedResponse.get(i).rawData != null) {
                 failedResponse.set(i, ResponseParser.parseResponseDetail(failedResponse.get(i)));

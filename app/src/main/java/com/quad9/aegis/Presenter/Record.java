@@ -60,6 +60,12 @@ public class Record extends Fragment {
         } else if (blocked == FAILED) {
             binding.dnsFilter.check(R.id.failed);
         }
+        if (blocked == BLOCKED || blocked == ALL) {
+            DnsSeeker.blocked.observe(getViewLifecycleOwner(), i -> prepareData(blocked));
+        }
+        if (blocked == FAILED || blocked == ALL) {
+            DnsSeeker.fail.observe(getViewLifecycleOwner(), i -> prepareData(blocked));
+        }
         binding.dnsFilter.setOnCheckedChangeListener(listener);
         return binding.getRoot();
     }
@@ -68,7 +74,7 @@ public class Record extends Fragment {
         RecyclerView.LayoutManager mLayoutManager;
         List<ResponseRecord> myDataset;
         if (isblocked == BLOCKED) {
-            myDataset = DnsSeeker.getInstance().getBlocked();
+            myDataset = DnsSeeker.getBlocked();
             if (myDataset.isEmpty()) {
                 binding.textEmpty.setText(DnsSeeker.getInstance().getResources().getString(R.string.empty_recent_blocked));
                 binding.textEmpty.setVisibility(View.VISIBLE);
@@ -84,7 +90,7 @@ public class Record extends Fragment {
                 binding.textEmpty.setVisibility(View.INVISIBLE);
             }
         } else {
-            myDataset = DnsSeeker.getInstance().getFailedResponse();
+            myDataset = DnsSeeker.getFailedResponse();
             if (myDataset.isEmpty()) {
                 binding.textEmpty.setText(DnsSeeker.getInstance().getResources().getString(R.string.empty_recent_failed));
                 binding.textEmpty.setVisibility(View.VISIBLE);
