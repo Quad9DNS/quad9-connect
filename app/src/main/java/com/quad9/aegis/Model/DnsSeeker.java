@@ -7,11 +7,9 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -25,6 +23,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
@@ -66,10 +66,14 @@ public class DnsSeeker extends Application {
     static String versionString = "";
 
     // Statistics
-    static int success;
-    static int fail;
-    static int blocked;
-    static int aliveTime;
+    static MutableLiveData<Integer> successMut = new MutableLiveData<>(0);
+    public static LiveData<Integer> success = successMut;
+    static MutableLiveData<Integer> failMut = new MutableLiveData<>(0);
+    public static LiveData<Integer> fail = failMut;
+    static MutableLiveData<Integer> blockedMut = new MutableLiveData<>(0);
+    public static LiveData<Integer> blocked = blockedMut;
+    static MutableLiveData<Integer> aliveTimeMut = new MutableLiveData<>(0);
+    public static LiveData<Integer> aliveTime = aliveTimeMut;
     static List<ResponseRecord> recentResponse = new ArrayList<ResponseRecord>();
     static List<ResponseRecord> blockedResponse = new ArrayList<ResponseRecord>();
     static List<ResponseRecord> failedResponse = new ArrayList<ResponseRecord>();
@@ -126,8 +130,8 @@ public class DnsSeeker extends Application {
 
         instance = this;
 
-        success = 0;
-        fail = 0;
+        successMut.postValue(0);
+        failMut.postValue(0);
 
 
         //}
@@ -137,10 +141,10 @@ public class DnsSeeker extends Application {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         PreferenceManager.setDefaultValues(this, R.xml.preference, false);
-        success = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("success", 0);
-        fail = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("fail", 0);
-        blocked = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("blocked_q", 0);
-        aliveTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("alive_time", 0);
+        successMut.postValue(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("success", 0));
+        failMut.postValue(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("fail", 0));
+        blockedMut.postValue(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("blocked_q", 0));
+        aliveTimeMut.postValue(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("alive_time", 0));
 
         if (recentResponse.size() == 0) {
             String temp = PreferenceManager.getDefaultSharedPreferences(getInstance().getApplicationContext()).getString("recent_response", "");
@@ -160,9 +164,6 @@ public class DnsSeeker extends Application {
         }
 
         status = new ConnectStatus();
-
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
-                resetReceiver, new IntentFilter("ResetStats"));
 
         try {
             PackageInfo packageInfo = getInstance().getApplicationContext()
@@ -215,22 +216,16 @@ public class DnsSeeker extends Application {
         instance = s;
     }
 
-    public static void setStats(int success, int fail, int blocked) {
-        getInstance().success = success;
-        getInstance().fail = fail;
-        getInstance().blocked = blocked;
-    }
-
     private void saveStatistics() {
         updateAliveTime();
         getStatus().updateTraffic();
         SharedPreferences.Editor editor = sharedPref.edit();
         Gson gson = new Gson();
-        editor.putInt("success", success);
-        editor.putInt("fail", fail);
-        editor.putInt("total_q", success + fail);
-        editor.putInt("blocked_q", blocked);
-        editor.putInt("alive_time", aliveTime);
+        editor.putInt("success", successMut.getValue());
+        editor.putInt("fail", failMut.getValue());
+        editor.putInt("total_q", successMut.getValue() + failMut.getValue());
+        editor.putInt("blocked_q", blockedMut.getValue());
+        editor.putInt("alive_time", aliveTimeMut.getValue());
         editor.putString("recent_response", gson.toJson(recentResponse));
         editor.putString("blocked_response", gson.toJson(blockedResponse));
         editor.putString("failed_response", gson.toJson(failedResponse));
@@ -491,8 +486,8 @@ public class DnsSeeker extends Application {
     // This should not a included in the app.
 
     public static void updateAliveTime() {
-        if (aliveTime == 0) {
-            aliveTime = (int) System.currentTimeMillis() / 3600000;
+        if (aliveTimeMut.getValue() == 0) {
+            aliveTimeMut.postValue((int) System.currentTimeMillis() / 3600000);
         }
         TestQuad9.queryTls(String.format("android-%s.appcounter.quad9.net", versionString), Record.TYPE.A);
     }
@@ -523,15 +518,6 @@ public class DnsSeeker extends Application {
         }
     }
 
-    private BroadcastReceiver resetReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            resetList();
-        }
-
-    };
-
     /**** FOR STATISTIC *****/
     public void addResponse(ResponseRecord r) {
         Log.i(TAG, "addResponse");
@@ -541,10 +527,10 @@ public class DnsSeeker extends Application {
         }
         if (r != null) {
             recentResponse.add(0, r);
-            success++;
+            successMut.postValue(successMut.getValue() + 1);
             status.updateSpeed(r.time);
             sendUpdateToActivity();
-            if (success % 200 == 0) {
+            if (successMut.getValue() % 200 == 0) {
                 saveStatistics();
             }
         }
@@ -563,7 +549,7 @@ public class DnsSeeker extends Application {
                     blockedResponse.remove(blockedResponse.size() - 1);
                 }
                 if (r != null) {
-                    blocked++;
+                    blockedMut.setValue(blockedMut.getValue() + 1);
                     blockedResponse.add(0, r);
                 }
                 if (status.isUsingNotification()) {
@@ -600,7 +586,7 @@ public class DnsSeeker extends Application {
         if (r != null) {
             recentResponse.add(0, r);
             failedResponse.add(0, r);
-            fail++;
+            failMut.setValue(failMut.getValue() + 1);
         }
 
     }
@@ -649,30 +635,30 @@ public class DnsSeeker extends Application {
         return new ArrayList<>(failedResponse);
     }
 
-    public void resetList() {
-        fail = 0;
-        success = 0;
-        blocked = 0;
+    public static void resetList() {
+        failMut.postValue(0);
+        successMut.postValue(0);
+        blockedMut.postValue(0);
         blockedResponse.clear();
         recentResponse.clear();
         failedResponse.clear();
         status.resetSpeed();
     }
 
-    public int getTotalCount() {
-        return success;
+    public static int getTotalCount() {
+        return successMut.getValue();
     }
 
-    public int getFailCount() {
-        return fail;
+    public static int getFailCount() {
+        return failMut.getValue();
     }
 
-    public int getSuccessCount() {
-        return success;
+    public static int getSuccessCount() {
+        return successMut.getValue();
     }
 
-    public int getBlockedCount() {
-        return blocked;
+    public static int getBlockedCount() {
+        return blockedMut.getValue();
     }
 
     public ConnectionMonitor getConnectionMonitor() {
