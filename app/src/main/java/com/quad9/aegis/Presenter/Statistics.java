@@ -5,8 +5,6 @@ import static com.quad9.aegis.Model.GlobalVariables.ALL;
 import static com.quad9.aegis.Model.GlobalVariables.BLOCKED;
 import static com.quad9.aegis.Model.GlobalVariables.FAILED;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,9 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.quad9.aegis.Model.DnsSeeker;
@@ -34,19 +30,11 @@ import java.text.DecimalFormat;
  */
 public class Statistics extends Fragment {
 
-    int success = 0;
-    int fail = 0;
-    int block = 0;
     private FragmentStatisticsBinding binding;
 
     public Statistics() {
         // Required empty public constructor
     }
-
-    private Statistics getInstance() {
-        return this;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,9 +54,7 @@ public class Statistics extends Fragment {
                 editor.putInt("total_q", 0);
                 editor.putInt("blocked_q", 0);
                 editor.apply();
-                sendResetToActivity();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.detach(getInstance()).attach(getInstance()).commit();
+                DnsSeeker.resetList();
             });
             builder.setNegativeButton("Cancel", (dialog, id) -> {
                 //action on dialog close
@@ -113,6 +99,10 @@ public class Statistics extends Fragment {
         });
         makeGraph();
 
+        DnsSeeker.success.observe(getViewLifecycleOwner(), i -> makeGraph());
+        DnsSeeker.fail.observe(getViewLifecycleOwner(), i -> makeGraph());
+        DnsSeeker.blocked.observe(getViewLifecycleOwner(), i -> makeGraph());
+
         return binding.getRoot();
     }
 
@@ -122,32 +112,10 @@ public class Statistics extends Fragment {
         makeGraph();
     }
 
-    @Override
-    public void onPause() {
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(updateReceiver);
-        super.onPause();
-
-    }
-
-    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        requireActivity().runOnUiThread(() -> makeGraph());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.start();
-        }
-    };
-
     public void prepareData() {
+        int success = DnsSeeker.getSuccessCount();
+        int fail = DnsSeeker.getFailCount();
+        int block = DnsSeeker.getBlockedCount();
 
         int total = success + fail;
         binding.inTotal.setText(String.format(getResources().getString(R.string.in_total), total));
@@ -200,12 +168,7 @@ public class Statistics extends Fragment {
     }
 
     private void makeGraph() {
-        success = DnsSeeker.getInstance().getSuccessCount();
-        fail = DnsSeeker.getInstance().getFailCount();
-        block = DnsSeeker.getInstance().getBlockedCount();
-        if (success != 0) {
-            prepareData();
-        }
+        prepareData();
     }
 
     private void sendResetToActivity() {
