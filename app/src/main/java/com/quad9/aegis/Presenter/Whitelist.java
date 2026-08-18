@@ -56,7 +56,7 @@ public class Whitelist extends Fragment {
         mAdapter = new MyAdapter(myDataset);
         binding.whitelistRecyclerView.setAdapter(mAdapter);
 
-        binding.addDomainBtn.setOnClickListener((View.OnClickListener) v -> {
+        binding.addDomainBtn.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             String title = null;
 
@@ -97,7 +97,7 @@ public class Whitelist extends Fragment {
     }
 
     public class MyAdapter extends RecyclerView.Adapter<Whitelist.MyAdapter.MyViewHolder> {
-        private List<String> mDataset;
+        private final List<String> mDataset;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -105,7 +105,7 @@ public class Whitelist extends Fragment {
         public class MyViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
 
-            private CardWhiltelistBinding binding;
+            private final CardWhiltelistBinding binding;
 
             public MyViewHolder(View v) {
                 super(v);
@@ -154,7 +154,7 @@ public class Whitelist extends Fragment {
                 holder.binding.removeBtn.setVisibility(View.VISIBLE);
             }
 
-            holder.binding.removeBtn.setOnClickListener((View.OnClickListener) v -> {
+            holder.binding.removeBtn.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                 String title = null;
 

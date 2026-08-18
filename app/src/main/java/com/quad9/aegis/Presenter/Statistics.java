@@ -5,7 +5,6 @@ import static com.quad9.aegis.Model.GlobalVariables.ALL;
 import static com.quad9.aegis.Model.GlobalVariables.BLOCKED;
 import static com.quad9.aegis.Model.GlobalVariables.FAILED;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.quad9.aegis.Model.DnsSeeker;
 import com.quad9.aegis.R;
@@ -169,12 +167,6 @@ public class Statistics extends Fragment {
 
     private void makeGraph() {
         prepareData();
-    }
-
-    private void sendResetToActivity() {
-        Intent intent = new Intent("ResetStats");
-
-        LocalBroadcastManager.getInstance(requireActivity()).sendBroadcast(intent);
     }
 
 

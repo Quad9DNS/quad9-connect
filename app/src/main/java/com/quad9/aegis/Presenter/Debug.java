@@ -68,7 +68,7 @@ public class Debug extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         binding.btnTest.setOnClickListener(v -> {
-            Fragment nextFrag = (Fragment) new Test();
+            Fragment nextFrag = new Test();
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, nextFrag)
                     .addToBackStack(null)
@@ -329,11 +329,6 @@ public class Debug extends Fragment {
     public void onStart() {
         super.onStart();
 
-    }
-
-    private void addBlocks() {
-        openUrlInChrome("http://q9.agog.com/api/domains");
-        //openNetworkSettings();
     }
 
     private void openUrlInChrome(String urlString) {

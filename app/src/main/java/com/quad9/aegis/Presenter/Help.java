@@ -174,7 +174,7 @@ public class Help extends Fragment {
         TraceRouteCopied.start("9.9.9.9", callback);
     }
 
-    private Runnable Connection = () -> {
+    private final Runnable Connection = () -> {
         Log.d("Zzz", "start connect");
         TestQuad9.dig_over_tls(DnsSeeker.getInstance().getApplicationContext(), testCallback);
     };

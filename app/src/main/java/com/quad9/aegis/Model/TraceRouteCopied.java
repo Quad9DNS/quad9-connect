@@ -205,12 +205,10 @@ public final class TraceRouteCopied {
     }
 
     public static class Result {
-        public final String ip;
         private final StringBuilder builder = new StringBuilder();
         private String allData;
 
         public Result(String ip) {
-            this.ip = ip;
         }
 
         public String content() {

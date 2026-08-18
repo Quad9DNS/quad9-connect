@@ -46,21 +46,18 @@ public class DnsResolver {
     final int NONETWORK = 2;
     final int CONNECTED = 1;
     final int PORTAL = 3;
-    private ParcelFileDescriptor descriptor;
-    private ParcelFileDescriptor TLSpfd;
-    private VpnSeekerService service;
+    private final ParcelFileDescriptor descriptor;
+    private final VpnSeekerService service;
     private boolean shutdown = true;
     private double totalTime = 0;
     private int reConnectTooMuch = 0;
-    private boolean splitFlag = false;
-    private FileDescriptor writeEndFd = null;
-    private FileDescriptor readEndFd = null;
-    private Queue<byte[]> deviceWrites = new LinkedList<>();
-    private Queue<ReadyQuery> tlsSocketWrites = new LinkedList<>();
+    private final FileDescriptor writeEndFd = null;
+    private final FileDescriptor readEndFd = null;
+    private final Queue<byte[]> deviceWrites = new LinkedList<>();
+    private final Queue<ReadyQuery> tlsSocketWrites = new LinkedList<>();
     private int STATUS = 0;
     private boolean BEWRITTEN = false;
     private int ResponsePerSession = 0;
-    private int whitelistCount = 0;
     private NewHashQuery whitelistDnsQ = new NewHashQuery();
     private NewHashQuery udpDnsQ = new NewHashQuery();
     private final SharedPreferences sharedPreferences;
@@ -528,7 +525,6 @@ public class DnsResolver {
                 + DnsSeeker.getStatus().getDnsQ().size() + " at " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND)
                 + " Resolved: " + ResponsePerSession + " queries.");
         ResponsePerSession = 0;
-        splitFlag = false;
         tlsSocketWrites.clear();
         mTlsSender.closeSocket();
         mTlsSender.reConnect();
@@ -638,24 +634,11 @@ public class DnsResolver {
     class PendingQuery {
         final DatagramSocket socket;
         final IpPacket packet;
-        private long time;
+        private final long time;
         boolean isDns = true;
 
         PendingQuery(DatagramSocket socket, IpPacket packet) {
             this.socket = socket;
-            this.packet = packet;
-            this.time = System.currentTimeMillis();
-        }
-
-        PendingQuery(DatagramSocket socket, IpPacket packet, boolean isDns) {
-            this.socket = socket;
-            this.packet = packet;
-            this.time = System.currentTimeMillis();
-            this.isDns = isDns;
-        }
-
-        PendingQuery(IpPacket packet) {
-            this.socket = null;
             this.packet = packet;
             this.time = System.currentTimeMillis();
         }
@@ -679,21 +662,7 @@ public class DnsResolver {
         DnsSeeker.getInstance().addFail(r);
     }
 
-    static boolean checkQuery(byte[] packetData) {
-        return true;
-    }
-
     char[] hexArray = "0123456789ABCDEF".toCharArray();
-
-    String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
 
     static void rejectPacket(String reason) {
         Log.d(TAG, "Discarded " + " " + reason);

@@ -13,16 +13,11 @@ public class ServerSelector {
     private static final String TAG = "ServerSelector";
     // TODO Add back to ConnectStatus
     private static List<String> blockingPool = Arrays.asList("9.9.9.9", "149.112.112.112", "2620:fe::fe", "2620:fe::fe:9");
-    private static List<String> noBlockingPool = Arrays.asList("9.9.9.10", "149.112.112.10", "2620:fe::10", "2620:fe::fe:10");
-    private static List<String> ECSPool = Arrays.asList("9.9.9.11", "149.112.112.11", "2620:fe::11", "2620:fe::fe:11");
-    private static List<String> ECSnoBlockingPool = Arrays.asList("9.9.9.12", "149.112.112.12", "2620:fe::12", "2620:fe::fe:12");
+    private static final List<String> noBlockingPool = Arrays.asList("9.9.9.10", "149.112.112.10", "2620:fe::10", "2620:fe::fe:10");
+    private static final List<String> ECSPool = Arrays.asList("9.9.9.11", "149.112.112.11", "2620:fe::11", "2620:fe::fe:11");
+    private static final List<String> ECSnoBlockingPool = Arrays.asList("9.9.9.12", "149.112.112.12", "2620:fe::12", "2620:fe::fe:12");
 
     private static List<String> candidateList;
-
-    ServerSelector() {
-    }
-
-    ;
 
     public static List<String> getCandidate(VpnSeekerService service) {
         List<MyThread> runnableList = new ArrayList<>();

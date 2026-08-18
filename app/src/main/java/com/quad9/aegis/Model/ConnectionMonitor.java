@@ -5,7 +5,6 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteConstraintException;
 import android.net.ConnectivityManager;
@@ -23,7 +22,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.net.InetAddress;
 import java.util.List;
@@ -322,12 +320,6 @@ public class ConnectionMonitor extends ConnectivityManager.NetworkCallback {
     public void onLost(Network network) {
         Log.i("Monitor", "Network Lost");
         DnsSeeker.getStatus().setOnline(false);
-    }
-
-    private void sendSignalMessageToActivity(String msg) {
-        Intent intent = new Intent("ThreadAction");
-        intent.putExtra("key", msg);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
     public void listAllAndUpdateNetworks() {

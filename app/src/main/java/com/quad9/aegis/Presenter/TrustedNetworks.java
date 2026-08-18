@@ -110,7 +110,7 @@ public class TrustedNetworks extends Fragment {
     }
 
     public class MyAdapter extends RecyclerView.Adapter<TrustedNetworks.MyAdapter.MyViewHolder> {
-        private List<TrustedNetwork> mDataset = new ArrayList<>();
+        private final List<TrustedNetwork> mDataset = new ArrayList<>();
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and

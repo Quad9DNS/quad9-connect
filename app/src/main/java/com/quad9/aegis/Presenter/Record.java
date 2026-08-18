@@ -37,7 +37,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class Record extends Fragment {
-    private static final String TAG = "Record";
 
     private FragmentRecordBinding binding;
     private RecyclerView.Adapter<MyAdapter.MyViewHolder> mAdapter;
@@ -109,7 +108,7 @@ public class Record extends Fragment {
         binding.myRecyclerView.setAdapter(mAdapter);
     }
 
-    private RadioGroup.OnCheckedChangeListener listener = new RadioGroup.OnCheckedChangeListener() {
+    private final RadioGroup.OnCheckedChangeListener listener = new RadioGroup.OnCheckedChangeListener() {
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -134,7 +133,7 @@ public class Record extends Fragment {
     };
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-        private List<ResponseRecord> mDataset;
+        private final List<ResponseRecord> mDataset;
         private int mExpandedPosition = -1;
 
         // Provide a reference to the views for each data item
@@ -152,7 +151,6 @@ public class Record extends Fragment {
 
         // Provide a suitable constructor (depends on the kind of dataset)
         public MyAdapter(List<ResponseRecord> myDataset) {
-            Log.d(TAG, "WTF?");
             mDataset = myDataset;
             binding.myRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         }

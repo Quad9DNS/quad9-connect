@@ -9,11 +9,8 @@ import android.os.Build;
 public class EventController {
     static String Channel_ID = "CHANNEL_ID";
     static String Channel_HIGH = "CHANNEL_HIGH";
-    EventController m = new EventController();
     static NotificationManager NotiManager;
     static NotificationManager highNotiManager;
-    static Notification.Builder noti;
-    static Notification.Builder highNoti;
 
 
     private EventController() {
@@ -55,9 +52,6 @@ public class EventController {
                     "Network Event",
                     NotificationManager.IMPORTANCE_DEFAULT);
             NotiManager.createNotificationChannel(channel);
-            noti = new Notification.Builder(DnsSeeker.getInstance(), Channel_ID);
-        } else {
-            noti = new Notification.Builder(DnsSeeker.getInstance());
         }
         return NotiManager;
     }

@@ -25,8 +25,8 @@ public class TlsSender {
 
     byte[] allData = new byte[2048];
     int allLength = 0;
-    private VpnSeekerService service;
-    private SSLConnector sslConnector;
+    private final VpnSeekerService service;
+    private final SSLConnector sslConnector;
 
     public TlsSender(VpnSeekerService s) {
         this.service = s;

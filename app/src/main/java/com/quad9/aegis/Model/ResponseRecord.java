@@ -10,16 +10,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseRecord {
 
-    public short requestId;
     public String type;
     public String name;
     public String IP;
-    public String resolver;
     public int time;
     public String timeStamp;
     public byte[] rawData;
@@ -38,10 +37,8 @@ public class ResponseRecord {
             byte[] rawData
     ) {
         this.name = name;
-        this.requestId = requestId;
         this.IP = IP;
         this.type = type;
-        this.resolver = resolver;
         this.time = time;
         this.timeStamp = timeStamp;
         this.rawData = rawData;
@@ -73,7 +70,7 @@ public class ResponseRecord {
                     int status = connection.getResponseCode();
                     Log.d("requestAPI", String.valueOf(status));
                     if (inputStream != null) {
-                        InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+                        InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                         BufferedReader in = new BufferedReader(reader);
 
                         String line = "";

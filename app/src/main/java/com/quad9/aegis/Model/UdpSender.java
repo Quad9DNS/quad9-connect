@@ -9,7 +9,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class UdpSender {
-    private VpnSeekerService service;
+    private final VpnSeekerService service;
     private static final String TAG = "UdpSender";
 
     UdpSender(VpnSeekerService s) {

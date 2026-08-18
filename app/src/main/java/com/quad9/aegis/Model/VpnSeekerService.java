@@ -43,7 +43,6 @@ public class VpnSeekerService extends VpnService implements Runnable {
     private static Thread mThread = null;
 
     DnsResolver mDnsResolver;
-    InetAddress localServer;
     Builder builder = new Builder();
     private static final String IPV6_SUBNET = "fd66:f83a:c650::";
 
@@ -67,7 +66,7 @@ public class VpnSeekerService extends VpnService implements Runnable {
         // ConnectionMonitor.getInstance().setContext(DnsSeeker.getInstance().getApplicationContext());
     }
 
-    private BroadcastReceiver restartReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver restartReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
@@ -159,7 +158,6 @@ public class VpnSeekerService extends VpnService implements Runnable {
                 }
 
                 Log.d(TAG, "start");
-                localServer = (InetAddress) intent.getSerializableExtra("localServer");
                 LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
                         restartReceiver, new IntentFilter("restartService"));
                 startThread();
@@ -275,26 +273,6 @@ public class VpnSeekerService extends VpnService implements Runnable {
 
     }
 
-    // Should compare reconnectVpn vs run
-    public void reconnectVpn() {
-        try {
-            if (descriptor != null) {
-                descriptor.close();
-                descriptor = null;
-            }
-            if (mDnsResolver != null) {
-                mDnsResolver.stop();
-            }
-
-            descriptor = this.builder.establish();
-            mDnsResolver = new DnsResolver(descriptor, this);
-            mDnsResolver.start();
-            mDnsResolver.process();
-        } catch (Exception e) {
-            Log.d(TAG, "" + e);
-        }
-    }
-
 
     public VpnService.Builder buildVpnService() {
         try {
@@ -341,7 +319,7 @@ public class VpnSeekerService extends VpnService implements Runnable {
             }
             this.builder.allowFamily(OsConstants.AF_INET);
             this.builder.allowFamily(OsConstants.AF_INET6);
-            String addressCandidate[] = {"10.9.9.9", "10.94.8.7", "192.168.6.6", "10.87.9.2", "10.111.8.8"};
+            String[] addressCandidate = {"10.9.9.9", "10.94.8.7", "192.168.6.6", "10.87.9.2", "10.111.8.8"};
             for (String s : addressCandidate) {
                 try {
                     this.builder.addAddress(s, 24);
@@ -358,22 +336,6 @@ public class VpnSeekerService extends VpnService implements Runnable {
         Log.d(TAG, "DNS Set: " + DnsSeeker.getStatus().getDNSSet().toString());
         return this.builder;
     }
-
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String message = intent.getStringExtra(
-                    "key");
-            if (message.equals("stopping")) {
-                Log.d("broadcastService", message);
-                stopThread();
-            } else if (message.equals("start")) {
-                Log.d("broadcastService", message);
-                startThread();
-            }
-        }
-    };
 
     public void addWhiteList() {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

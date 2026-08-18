@@ -7,10 +7,9 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -63,8 +62,6 @@ public class ConnectStatus {
 
     private boolean activated;
     private boolean connected;
-    private boolean networkStatus;
-    private boolean forceStopped;
     private boolean resetFlag = false;
     private boolean newNetowrk = false;
 
@@ -75,15 +72,14 @@ public class ConnectStatus {
     private boolean usingNotification;
     private boolean usingEnhanced;
 
-    private boolean usingPortal;
     private boolean onTrustedNetwork;
 
     private boolean debugMode = false;
     private boolean toggleIP = true;
-    private Set<InetAddress> dnsSet = new HashSet<InetAddress>();
+    private final Set<InetAddress> dnsSet = new HashSet<InetAddress>();
     private long recent_blocking = 0;
-    private ArrayList<Integer> speedList = new ArrayList();
-    private int[] time_distribution = new int[5];
+    private final ArrayList<Integer> speedList = new ArrayList();
+    private final int[] time_distribution = new int[5];
     private final HashQuery dnsQ = new HashQuery();
     private List<String> serverName;
     private String customServerIp;
@@ -91,10 +87,8 @@ public class ConnectStatus {
     private Set<String> wildCardDomain = new HashSet<String>();
     private String currentDst = "";
     private int connectionCount = 0;
-    private int queriesSent = 0;
-    private int queriesReceived = 0;
-    private String reportDate = "";
-    private int reportCounts = 0;
+    private final int queriesSent = 0;
+    private final int queriesReceived = 0;
 
 
     public boolean isActive() {
@@ -111,10 +105,6 @@ public class ConnectStatus {
 
     public boolean isRouted() {
         return ConnectionMonitor.getInstance().isRouted();
-    }
-
-    boolean isForceStopped() {
-        return connected;
     }
 
     public boolean isUsingIpv6() {
@@ -167,7 +157,6 @@ public class ConnectStatus {
     }
 
     void setOnline(boolean flag) {
-        networkStatus = flag;
     }
 
     void changeServer() {
@@ -225,7 +214,6 @@ public class ConnectStatus {
     }
 
     public void setPortal(boolean flag) {
-        usingPortal = flag;
     }
 
     public void setReset(boolean flag) {
@@ -292,11 +280,10 @@ public class ConnectStatus {
     public boolean checkPublicSuffix(String domain) {
         Set<String> temp = new HashSet<>();
         try {
-            ;
             // File fileDir = new File("wildcardList.txt");
 
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(DnsSeeker.getInstance().getResources().getAssets().open("public_suffix_list.txt"), "UTF-8"));
+                    new InputStreamReader(DnsSeeker.getInstance().getResources().getAssets().open("public_suffix_list.txt"), StandardCharsets.UTF_8));
             String str;
             int count = 0;
 
@@ -333,12 +320,6 @@ public class ConnectStatus {
         saveWhitelist();
     }
 
-    public void clearWhitelistDomain() {
-        wildCardDomain.clear();
-        whitelistDomain.clear();
-        saveWhitelist();
-    }
-
     public Set<String> getWhitelistDomain() {
         Set<String> mergedSet = new HashSet<String>();
         mergedSet.addAll(STATIC_WHITELIST_DOMAINS);
@@ -349,19 +330,11 @@ public class ConnectStatus {
 
     public boolean isInDNSSet(List<InetAddress> l) {
 
-        if (dnsSet.containsAll(l)) {
-            return true;
-        } else {
-            return false;
-        }
+        return dnsSet.containsAll(l);
     }
 
     public void addDNSSet(List<InetAddress> l) {
         dnsSet.addAll(l);
-    }
-
-    public void clearDNSSet() {
-        dnsSet.clear();
     }
 
     public Set<InetAddress> getDNSSet() {
@@ -392,31 +365,6 @@ public class ConnectStatus {
             return sum / speedList.size();
         }
         return sum;
-    }
-
-    public void increReport() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = new Date();
-        if (reportDate.equals(formatter.format(date))) {
-            reportCounts++;
-        } else {
-            reportDate = formatter.format(date);
-            reportCounts = 1;
-        }
-    }
-
-    public boolean allowReport() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = new Date();
-        if (reportDate.equals(formatter.format(date))) {
-            return reportCounts < 5;
-        } else {
-            return true;
-        }
-    }
-
-    public int[] getTimeDistribution() {
-        return time_distribution;
     }
 
     void updateSpeed(int t) {
@@ -513,59 +461,6 @@ public class ConnectStatus {
 
     public String getCustomServerIp() {
         return customServerIp;
-    }
-
-    public String getOldServerName() {
-
-        if (debugMode) {
-            return "1.0.0.1";
-        }
-        if (usingTLS) {
-            if (usingBlock) {
-                if (usingIpv6) {
-                    if (toggleIP) {
-                        return "2620:fe::fe";
-                    } else {
-                        return "2620:fe::fe:9";
-                    }
-                } else {
-                    if (toggleIP) {
-                        return "9.9.9.9";
-                    } else {
-                        return "149.112.112.112";
-                    }
-                }
-            } else {
-                if (usingIpv6) {
-                    if (toggleIP) {
-                        return "2620:fe::10";
-                    } else {
-                        return "2620:fe::fe:10";
-                    }
-
-                } else {
-                    if (toggleIP) {
-                        return "9.9.9.10";
-                    } else {
-                        return "149.112.112.10";
-                    }
-                }
-            }
-        } else {
-            if (usingBlock) {
-                if (getRandomBoolean()) {
-                    return "9.9.9.9";
-                } else {
-                    return "149.112.112.112";
-                }
-            } else {
-                if (getRandomBoolean()) {
-                    return "9.9.9.10";
-                } else {
-                    return "149.112.112.10";
-                }
-            }
-        }
     }
 
     public boolean isOnTrustedNetwork() {

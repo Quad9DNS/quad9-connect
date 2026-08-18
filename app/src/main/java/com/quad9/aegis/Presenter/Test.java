@@ -85,7 +85,7 @@ public class Test extends Fragment {
         thread.start();
     }
 
-    private Runnable Connection = () -> {
+    private final Runnable Connection = () -> {
         if (testDns()) {
             myHandler.sendEmptyMessage(MSG_UDP_TEST_OK);
         } else {

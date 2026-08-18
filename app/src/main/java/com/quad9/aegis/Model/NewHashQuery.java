@@ -31,19 +31,6 @@ public class NewHashQuery {
         hash.put(key, q);
     }
 
-    public void delete_all() {
-        String temp;
-        if (!hash.isEmpty()) {
-            Iterator<String> it = hash.keySet().iterator();
-            while (it.hasNext()) {
-                temp = it.next();
-                sendFailToApp(ResponseParser.parseQuestion(hash.get(temp).packet, "No Network Available"));
-                Log.d(TAG, "Send fail" + temp);
-                it.remove();
-            }
-        }
-    }
-
     public double getDuration(String key) {
         Log.d(TAG, "time spent : " + hash.get(key).lastSeconds());
         return hash.get(key).lastSeconds();

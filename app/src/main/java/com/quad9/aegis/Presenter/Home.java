@@ -72,25 +72,25 @@ public class Home extends Fragment {
         binding.onOffSwitch.setOnCheckedChangeListener(mOnCheckedChangeListener);
         String temp;
         if (DnsSeeker.getStatus().isUsingTLS()) {
-            temp = String.format(getResources().getString(R.string.queries_are_secured), DnsSeeker.getInstance().getTotalCount());
+            temp = String.format(getResources().getString(R.string.queries_are_secured), DnsSeeker.getTotalCount());
         } else {
-            temp = String.format(getResources().getString(R.string.queries_are_sent), DnsSeeker.getInstance().getTotalCount());
+            temp = String.format(getResources().getString(R.string.queries_are_sent), DnsSeeker.getTotalCount());
         }
         binding.simpleLog.setText(temp);
         DnsSeeker.responsesUpdated.observe(getViewLifecycleOwner(), _v -> {
             if (!DnsSeeker.getStatus().recentBlocking()) {
                 String label;
                 if (DnsSeeker.getStatus().isUsingTLS()) {
-                    label = String.format(getResources().getString(R.string.queries_are_secured), DnsSeeker.getInstance().getTotalCount());
+                    label = String.format(getResources().getString(R.string.queries_are_secured), DnsSeeker.getTotalCount());
                 } else {
-                    label = String.format(getResources().getString(R.string.queries_are_sent), DnsSeeker.getInstance().getTotalCount());
+                    label = String.format(getResources().getString(R.string.queries_are_sent), DnsSeeker.getTotalCount());
                 }
                 if (binding != null) {
                     binding.simpleLog.setText(label);
                     binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_check_white_24dp), null, null, null);
                 }
             } else {
-                String label = String.format(requireActivity().getResources().getString(R.string.queries_are_blocked), DnsSeeker.getInstance().getBlockedCount());
+                String label = String.format(requireActivity().getResources().getString(R.string.queries_are_blocked), DnsSeeker.getBlockedCount());
                 if (binding != null) {
                     binding.simpleLog.setText(label);
                     binding.simpleLog.setCompoundDrawablesWithIntrinsicBounds(DnsSeeker.getInstance().getResources().getDrawable(R.drawable.ic_block_white_24dp), null, null, null);
@@ -119,7 +119,7 @@ public class Home extends Fragment {
                 Thread t = new Thread(() -> TestQuad9.dig_over_tls(DnsSeeker.getInstance(), getServerCallback));
                 t.start();
             } else {
-                DnsSeeker.getInstance().deActivateService();
+                DnsSeeker.deActivateService();
             }
         } else {
             binding.onOffSwitch.setOnCheckedChangeListener(null);
@@ -192,7 +192,7 @@ public class Home extends Fragment {
     }
 
 
-    private BroadcastReceiver networkStatusReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver networkStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean connected = intent.getBooleanExtra("connected", false);
@@ -208,7 +208,7 @@ public class Home extends Fragment {
         }
     };
 
-    private TestQuad9.Callback getServerCallback = s -> {
+    private final TestQuad9.Callback getServerCallback = s -> {
         Analytics.INSTANCE.setCustomCrashlyticsKey("CurrentServer", s);
         String currentNetwork = DnsSeeker.getInstance().getConnectionMonitor().getCurrentNetwork();
         Analytics.INSTANCE.setCustomCrashlyticsKey("CurrentNetwork", currentNetwork);

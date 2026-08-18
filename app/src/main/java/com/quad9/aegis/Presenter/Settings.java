@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -29,7 +28,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroupAdapter;
-import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
@@ -54,11 +52,8 @@ public class Settings extends PreferenceFragmentCompat {
     private static final String TAG = "Home";
 
     static MultiSelectListPreference mListPreference;
-    PackageManager packageManager;
-    SharedPreferences sharedPreferences;
-    private static CharSequence entries[];
-    private static CharSequence entryValues[];
-    private static boolean listReady = false;
+    private static CharSequence[] entries;
+    private static CharSequence[] entryValues;
 
     public Settings() {
 
@@ -69,7 +64,6 @@ public class Settings extends PreferenceFragmentCompat {
     private static class GetAppList extends AsyncTask<PackageManager, Integer, String> {
         @Override
         protected String doInBackground(PackageManager... packageManager) {
-            listReady = false;
             ArrayList<ApplicationInfo> installedApplications = new ArrayList<ApplicationInfo>();
             List<PackageInfo> installedPackages =
                     packageManager[0].getInstalledPackages(PackageManager.GET_PERMISSIONS);
@@ -105,7 +99,6 @@ public class Settings extends PreferenceFragmentCompat {
             }
             mListPreference.setEntries(entries);
             mListPreference.setEntryValues(entryValues);
-            listReady = true;
             LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(DnsSeeker.getInstance());
             Intent localIntent = new Intent("ListReady");
             localBroadcastManager.sendBroadcast(localIntent);
@@ -124,13 +117,6 @@ public class Settings extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Load the preferences from an XML resource
         setPreferencesFromResource(R.xml.preference, rootKey);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity());
-
-        //onSharedPreferenceChanged(sharedPreferences, getString(R.string.movies_categories_key));
-    }
-
-    public void onClick(View v) {
-
     }
 
     @Override
@@ -153,7 +139,7 @@ public class Settings extends PreferenceFragmentCompat {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        mListPreference = (MultiSelectListPreference) findPreference("white_list");
+        mListPreference = findPreference("white_list");
         mListPreference.setEnabled(false);
         prepareAppList(requireActivity().getPackageManager());
         //addPreferencesFromResource(R.xml.preference);

@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LiveEvent<T> extends MutableLiveData<T> {
-    private static final String TAG = "LiveEvent";
 
     private final AtomicBoolean pendingEvent = new AtomicBoolean(false);
 

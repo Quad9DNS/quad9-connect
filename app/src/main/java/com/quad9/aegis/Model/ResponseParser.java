@@ -46,14 +46,10 @@ public class ResponseParser {
         DnsResourceRecordType.register(new DnsResourceRecordType((short) 264, "IPN (BP Node Number)"));
     }
 
-    ResponseParser() {
-
-    }
-
     public static ResponseRecord parseQuestion(IpPacket requestPacket, String reason) {
         try {
             //Log.d(TAG,requestPacket.getPayload().toString());
-            DnsPacket dns = (DnsPacket) requestPacket.getPayload().get(DnsPacket.class);
+            DnsPacket dns = requestPacket.getPayload().get(DnsPacket.class);
             // DNSMessage dns = new DNSMessage(requestPacket.getPayload().getRawData());
             List<DnsQuestion> listQuestion = dns.getHeader().getQuestions();
             String type = "";
@@ -175,7 +171,6 @@ public class ResponseParser {
                 r.type = type;
                 r.name = resMessage.questions.get(0).name.toString();
                 r.IP = IP;
-                r.resolver = "9.9.9.9";
             }
         } catch (Exception e) {
             Log.e(TAG, "Error parsing response record" + e);
@@ -186,7 +181,7 @@ public class ResponseParser {
 
     public static boolean checkWhitelist(IpPacket requestPacket) {
         try {
-            DnsPacket dns = (DnsPacket) requestPacket.getPayload().get(DnsPacket.class);
+            DnsPacket dns = requestPacket.getPayload().get(DnsPacket.class);
             List<DnsQuestion> listQuestion = dns.getHeader().getQuestions();
             String name = "";
             name = listQuestion.get(0).getQName().toString();

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -80,7 +81,7 @@ public class Search extends Fragment {
         return result;
     }
 
-    private View.OnClickListener example = v -> {
+    private final View.OnClickListener example = v -> {
         Log.d("search", "searching");
         submit(v);
     };
@@ -129,7 +130,7 @@ public class Search extends Fragment {
                     return;
                 }
                 if (inputStream != null) {
-                    InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+                    InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                     BufferedReader in = new BufferedReader(reader);
 
                     String line = "";
