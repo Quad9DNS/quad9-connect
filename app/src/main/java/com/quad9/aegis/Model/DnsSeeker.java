@@ -85,8 +85,12 @@ public class DnsSeeker extends Application {
 
       switch (msg.what) {
       case MSG_TEST_OK:
-        networkIntent.putExtra("connected", true);
-        activateVpnService();
+        if (VpnService.prepare(DnsSeeker.getInstance()) == null) {
+          networkIntent.putExtra("connected", true);
+          activateVpnService();
+        } else {
+          networkIntent.putExtra("connected", false);
+        }
         LocalBroadcastManager.getInstance(getInstance())
             .sendBroadcast(networkIntent);
         break;
