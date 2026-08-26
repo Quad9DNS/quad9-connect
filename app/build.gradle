@@ -45,7 +45,7 @@ android {
 
 dependencies {
     // Import the BoM for the Firebase platform
-    googleplayImplementation platform('com.google.firebase:firebase-bom:34.17.0')
+    googleplayImplementation platform('com.google.firebase:firebase-bom:34.18.0')
 
     // Add the dependency for the Analytics library
     // When using the BoM, you don't specify versions in Firebase library dependencies
@@ -75,7 +75,7 @@ dependencies {
     implementation 'ch.acra:acra-mail:5.13.1'
     implementation 'ch.acra:acra-dialog:5.13.1'
 
-    implementation 'org.conscrypt:conscrypt-android:2.6.2'
+    implementation 'org.conscrypt:conscrypt-android:2.6.3'
     implementation 'com.github.AppIntro:AppIntro:v5.1.0'
     googleplayImplementation 'com.google.firebase:firebase-core:21.1.1'
     googleplayImplementation 'com.google.firebase:firebase-analytics'
