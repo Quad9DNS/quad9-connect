@@ -68,14 +68,14 @@ dependencies {
     implementation 'org.pcap4j:pcap4j-packetfactory-static:1.8.2'
     implementation 'de.measite.minidns:minidns-core:0.2.4'
     implementation 'de.measite.minidns:minidns-hla:0.2.4'
-    implementation 'org.slf4j:slf4j-simple:2.0.18'
+    implementation 'org.slf4j:slf4j-simple:2.0.19'
 
     googleplayImplementation 'com.google.android.gms:play-services-plus:17.0.0'
 
     implementation 'ch.acra:acra-mail:5.13.1'
     implementation 'ch.acra:acra-dialog:5.13.1'
 
-    implementation 'org.conscrypt:conscrypt-android:2.6.3'
+    implementation 'org.conscrypt:conscrypt-android:2.7.0'
     implementation 'com.github.AppIntro:AppIntro:v5.1.0'
     googleplayImplementation 'com.google.firebase:firebase-core:21.1.1'
     googleplayImplementation 'com.google.firebase:firebase-analytics'
