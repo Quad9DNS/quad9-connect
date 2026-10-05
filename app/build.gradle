@@ -57,7 +57,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.activity:activity:1.13.0"
-    implementation 'androidx.core:core-ktx:1.19.0'
+    implementation 'androidx.core:core-ktx:1.19.1'
 
     implementation 'com.google.code.gson:gson:2.14.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
@@ -68,7 +68,7 @@ dependencies {
     implementation 'org.pcap4j:pcap4j-packetfactory-static:1.8.2'
     implementation 'de.measite.minidns:minidns-core:0.2.4'
     implementation 'de.measite.minidns:minidns-hla:0.2.4'
-    implementation 'org.slf4j:slf4j-simple:2.0.19'
+    implementation 'org.slf4j:slf4j-simple:2.0.20'
 
     googleplayImplementation 'com.google.android.gms:play-services-plus:17.0.0'
 
