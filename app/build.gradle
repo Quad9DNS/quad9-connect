@@ -72,8 +72,8 @@ dependencies {
 
     googleplayImplementation 'com.google.android.gms:play-services-plus:17.0.0'
 
-    implementation 'ch.acra:acra-mail:5.13.1'
-    implementation 'ch.acra:acra-dialog:5.13.1'
+    implementation 'ch.acra:acra-mail:5.14.2'
+    implementation 'ch.acra:acra-dialog:5.14.2'
 
     implementation 'org.conscrypt:conscrypt-android:2.7.0'
     implementation 'com.github.AppIntro:AppIntro:v5.1.0'
